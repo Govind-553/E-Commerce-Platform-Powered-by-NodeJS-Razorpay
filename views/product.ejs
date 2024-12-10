@@ -6,18 +6,88 @@
 	<title>Razorpay Web-Integration</title>
 	<link rel="icon" href="/img/payment.png" type="image/x-icon">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+	<style>
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+}
+
+div {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	margin: 180px 15px;
+    padding: 20px;
+    width: 200px;
+    display: inline-block;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+div:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+img {
+    border-radius: 50%;
+    margin-bottom: 15px;
+    transition: transform 0.3s ease;
+}
+
+img:hover {
+    transform: scale(1.1);
+}
+
+p {
+    margin: 10px 0;
+    color: #333333;
+    font-size: 16px;
+}
+
+p b {
+    font-size: 18px;
+    color: #007bff;
+}
+
+input[type="submit"] {
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+@media (max-width: 768px) {
+    div {
+        width: 100%;
+        margin: 10px auto;
+        display: block;
+    }
+}
+	</style>
 </head>
 
 <body>
 	<hr/>
 		<div style="display:inline-block">
 			<img src="https://cdn.pixabay.com/photo/2014/04/03/10/55/t-shirt-311732_960_720.png" alt="" width="100px" height="100px">
-			<p>Shirt</p>
-			<p><b>Amount:- Rs. 500</b></p>
+			<p>T-Shirt</p>
+			<p><b>Amount:- Rs. 300</b></p>
 			<form class="pay-form">
-				<input type="hidden" name="name" value="Shirt">
-				<input type="hidden" name="amount" value="500">
-				<input type="hidden" name="description" value="Shirt Buying">
+				<input type="hidden" name="name" value="T-Shirt">
+				<input type="hidden" name="amount" value="300">
+				<input type="hidden" name="description" value="T-Shirt Buying">
 				<input type="submit" value="Pay Now">
 			</form>
 		</div>
@@ -34,6 +104,29 @@
 			</form>
 		</div>
 	
+		<div style="display:inline-block">
+			<img src="https://cdn.pixabay.com/photo/2013/07/12/18/20/shoes-153310_960_720.png" alt="" width="100px" height="100px">
+			<p>Jeans</p>
+			<p><b>Amount:- Rs. 800</b></p>
+			<form class="pay-form">
+				<input type="hidden" name="name" value="Jeans">
+				<input type="hidden" name="amount" value="800">
+				<input type="hidden" name="description" value="Jeans Buying">
+				<input type="submit" value="Pay Now">
+			</form>
+		</div>
+
+		<div style="display:inline-block">
+			<img src="https://cdn.pixabay.com/photo/2013/07/12/18/20/shoes-153310_960_720.png" alt="" width="100px" height="100px">
+			<p>Shirt</p>
+			<p><b>Amount:- Rs. 500</b></p>
+			<form class="pay-form">
+				<input type="hidden" name="name" value="Shirt">
+				<input type="hidden" name="amount" value="500">
+				<input type="hidden" name="description" value="Shirt Buying">
+				<input type="submit" value="Pay Now">
+			</form>
+		</div>
 </body>
 
 </html>
