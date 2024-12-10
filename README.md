@@ -28,6 +28,10 @@ process involves creating an order via Razorpay and completing the transaction s
 ### 🛠️ Key Technologies
 * **Node.js:** Backend server logic.
 * **Express.js:** Web framework for Node.js.
-* **Razorpay** SDK: Payment gateway integration.
+* **Razorpay SDK:** Payment gateway integration.
 * **EJS:** Template engine for rendering pages.
 * **CSS:** Responsive and interactive styling.
+
+### 📸 Preview
+👉 Click below to visit the live demo!<br>
+Link: (https://razorpay-payment-hqcn.onrender.com/)
