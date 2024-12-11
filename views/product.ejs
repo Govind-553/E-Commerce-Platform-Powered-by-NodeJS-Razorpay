@@ -13,23 +13,91 @@ body {
     margin: 0;
     padding: 20px;
     text-align: center;
+	overflow-x: hidden;
 }
 
-div {
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-	margin: 15px;
-    padding: 20px;
-    width: 200px;
-    display: inline-block;
-    text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+.container {
+	width: 1200px;
+	margin: auto;
+	max-width: 90%;
+	transition: transform 1s;
 }
 
-div:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+header img {
+	width: 50px;
+}
+
+header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+header .iconCart {
+	position: relative;
+	z-index: 1;
+}
+header .totalQuantity {
+	position: absolute;
+	top: 0;
+	right: -15px;
+	font-size: 15px;
+	background-color: #b31010;
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	color: #fff;
+    font-weight: bold;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	transition: translateX(20px);
+}
+
+.listProduct {
+	margin-top: 25px;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 25px;
+}
+.listProduct .item img {
+	width: 300px;
+	height: 300px
+}
+.listProduct .item h4 {
+	font-size: 22px;
+	font-weight: bold;
+	margin: 8px auto;
+}
+.listProduct .item .price{
+	font-size: 16px;
+	font-weight: bold;
+	margin: 8px auto;
+}
+.listProduct .item {
+	position: relative;
+}
+.listProduct .item button{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	background-color: #b31010;
+	color: #fff;
+	font-weight: bold;
+	width: 40%;
+	border: none;
+	border-radius: 5px;
+	padding: 20px 30px;
+	box-shadow: 0 10px 50px #000;
+	cursor: pointer;
+	transform: translateX(-50%) translateY(25px);
+    opacity: 0;
+}
+
+.listProduct .item:hover button{
+	transition: 0.5s;
+	opacity: 1;
+	transform: translateX(-50%);
 }
 
 img {
@@ -78,7 +146,47 @@ input[type="submit"]:hover {
 </head>
 
 <body>
-	<hr/>
+	<div class="container">
+		<header>
+			<h1>LIST PRODUCT</h1>
+			<div class="iconCart">
+				<img src="/img/shopping-cart.png" alt="cart-icon">
+				<div class="totalQuantity">0</div>
+			</div>
+		</header>
+	</div>
+
+	<div class="listProduct">
+		<div class="item">
+			<img src="https://cdn.pixabay.com/photo/2014/04/03/10/55/t-shirt-311732_960_720.png">
+			<h4>T-shirt</h4>
+			<div class="price">Amount:- Rs. 300</div>
+			<button>Add to cart</button>
+		</div>
+
+		<div class="item">
+			<img src="https://clipart-library.com/images_k/shoes-transparent-background/shoes-transparent-background-10.png">
+			<h4>Shoes</h4>
+			<div class="price">Amount:- Rs. 900</div>
+			<button>Add to cart</button>
+		</div>
+
+		<div class="item">
+			<img src="https://cdn.pixabay.com/photo/2017/09/29/15/45/woman-2799490_960_720.jpg">
+			<h4>Jeans</h4>
+			<div class="price">Amount:- Rs. 800</div>
+			<button>Add to cart</button>
+		</div>
+
+		<div class="item">
+			<img src="https://static.vecteezy.com/system/resources/previews/013/368/544/non_2x/stylish-black-t-shirt-with-floral-prints-navy-blue-t-shirt-on-a-transparent-background-bodyless-blue-t-shirt-image-for-personal-use-men-s-fashion-wear-apparel-image-free-png.png">
+			<h4>Shirt</h4>
+			<div class="price">Amount:- Rs. 500</div>
+			<button>Add to cart</button>
+		</div>
+	</div>
+
+
 		<div style="display:inline-block">
 			<img src="https://cdn.pixabay.com/photo/2014/04/03/10/55/t-shirt-311732_960_720.png" alt="" width="100px" height="100px">
 			<p>T-Shirt</p>
