@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+	<link rel="icon" href="/img/cart.png" type="image/x-icon">
+<style>
+.checkoutLayout {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 50px;
+    padding: 20px;
+    background-color: #F3F4F6;
+}
+
+.checkoutLayout .right {
+    background-color: #3B82F6;
+    border-radius: 20px;
+    padding: 40px;
+    color: #FFFFFF;
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.checkoutLayout .right:hover {
+    transform: scale(1.02);
+    box-shadow: 0 12px 30px rgba(59, 130, 246, 0.6);
+}
+
+.checkoutLayout .form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    border-bottom: 1px solid #E0E0E0;
+    padding-bottom: 20px;
+}
+
+.checkoutLayout .form input,
+.checkoutLayout .form select {
+    width: 100%;
+    padding: 10px 20px;
+    box-sizing: border-box;
+    border-radius: 20px;
+    margin-top: 10px;
+    border: none;
+    background-color: #F3F4F6;
+    color: #1F2937;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.checkoutLayout .form input:focus,
+.checkoutLayout .form select:focus {
+    background-color: #FFFFFF;
+    box-shadow: 0 0 8px #3B82F6;
+    outline: none;
+}
+
+.checkoutLayout .form h1,
+.checkoutLayout .form .group:nth-child(-n+3) {
+    grid-column-start: 1;
+    grid-column-end: 3;
+}
+
+.checkoutLayout .right .return .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.checkoutLayout .right .return .row div:nth-child(2) {
+    font-weight: bold;
+    font-size: x-large;
+}
+
+.buttonCheckout {
+    width: 100%;
+    height: 50px;
+    border: none;
+    border-radius: 25px;
+    background-color: #10B981;
+    font-weight: bold;
+    color: #FFFFFF;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 20px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
+}
+
+.buttonCheckout:hover {
+    background-color: #059669;
+    transform: translateY(-3px);
+}
+
+.buttonCheckout:active {
+    transform: translateY(0);
+    background-color: #047857;
+}
+
+.returnCart .list .item {
+    display: grid;
+    grid-template-columns: 80px 1fr 50px 80px;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+    padding: 10px 20px;
+    border-radius: 20px;
+    background-color: #FFFFFF;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.returnCart .list .item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.returnCart .list .item img {
+    height: 80px;
+    border-radius: 10px;
+}
+
+.returnCart .list .item .name,
+.returnCart .list .item .returnPrice {
+    font-size: large;
+    font-weight: bold;
+    color: #1F2937;
+}
+
+a {
+    display: inline-block;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    color: #FFFFFF;
+    background-color: #3B82F6;
+    padding: 12px 24px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+a:hover {
+    background-color: #2563EB;
+    transform: scale(1.1);
+}
+
+a:active {
+    transform: scale(0.95);
+}
+
+</style>
+</head>
+<body> 
+<div class="container">
+    <div class="checkoutLayout">    
+        <div class="returnCart">
+            <a href="/">Keep shopping</a>
+            <h1>List Product in Cart</h1>
+            <div class="list">
+
+                <div class="item">
+                    <img src="img/T-shirt.png">
+                    <div class="info">
+                        <div class="name">T-shirt</div>
+                        <div class="price">Amount:- Rs.300/1 product</div>
+                    </div>
+                    <div class="quantity">5</div>
+                    <div class="returnPrice">Amount:- Rs.110</div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="right">
+            <h1>Checkout</h1>
+
+            <div class="form">
+                <div class="group">
+                    <label for="name">Full Name</label>
+                    <input type="text" name="name" id="name">
+                </div>
+    
+                <div class="group">
+                    <label for="phone">Phone Number</label>
+                    <input type="text" name="phone" id="phone">
+                </div>
+    
+                <div class="group">
+                    <label for="address">Address</label>
+                    <input type="text" name="address" id="address">
+                </div>
+    
+                <div class="group">
+                    <label for="country">Country</label>
+                    <select name="country" id="country" onchange="updateCityOptions()">
+                    <option value="">Choose..</option>
+                    <option value="India">India</option>
+                    </select>
+                </div>
+
+                <div class="group">
+                    <label for="city">City</label>
+                    <select name="city" id="city">
+                    <option value="">Choose..</option>
+                    </select>
+                </div>
+            </div>
+            <div class="return">
+                <div class="row">
+                    <div>Total Quantity</div>
+                    <div class="totalQuantity">70</div>
+                </div>
+                <div class="row">
+                    <div>Total Price</div>
+                    <div class="totalPrice">Amount:- Rs.900</div>
+                </div>
+            </div>
+            <button class="buttonCheckout">CHECKOUT</button>
+            </div>
+    </div>
+</div>
+
+
+<script>
+ const statesInIndia = [
+    "Mumbai",
+    "Amritsar",
+    "Chandigarh",
+    "Patna",
+    "Dehradun",
+    "Delhi",
+    "Goa",
+    "Ahmedabad",
+    "Bangalore",
+    "Kanpur",
+    "Pune",
+    "Lucknow",
+    "Jaipur",
+    "Chennai",
+    "Hyderabad",
+    "Kolkata",
+    "Assam",
+    "Jammu & Kashmir"
+  ];
+
+  function updateCityOptions() {
+    const country = document.getElementById("country").value;
+    const cityDropdown = document.getElementById("city");
+    cityDropdown.innerHTML = '<option value="">Choose..</option>';
+
+    if (country === "India") {
+      statesInIndia.forEach((state) => {
+        const option = document.createElement("option");
+        option.value = state;
+        option.textContent = state;
+        cityDropdown.appendChild(option);
+      });
+    }
+  }
+
+let listCart = [];
+function checkCart(){
+        var cookieValue = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('listCart='));
+        if(cookieValue){
+            listCart = JSON.parse(cookieValue.split('=')[1]);
+        }
+}
+checkCart();
+addCartToHTML();
+function addCartToHTML(){
+    // clear data default
+    let listCartHTML = document.querySelector('.returnCart .list');
+    listCartHTML.innerHTML = '';
+
+    let totalQuantityHTML = document.querySelector('.totalQuantity');
+    let totalPriceHTML = document.querySelector('.totalPrice');
+    let totalQuantity = 0;
+    let totalPrice = 0;
+    // if has product in Cart
+    if(listCart){
+        listCart.forEach(product => {
+            if(product){
+                let newCart = document.createElement('div');
+                newCart.classList.add('item');
+                newCart.innerHTML = 
+                    `<img src="${product.image}">
+                    <div class="info">
+                        <div class="name">${product.name}</div>
+                        <div class="price">Rs.${product.price}/1 product</div>
+                    </div>
+                    <div class="quantity">${product.quantity}</div>
+                    <div class="returnPrice">Amount:- Rs.${product.price * product.quantity}</div>`;
+                listCartHTML.appendChild(newCart);
+                totalQuantity = totalQuantity + product.quantity;
+                totalPrice = totalPrice + (product.price * product.quantity);
+            }
+        })
+    }
+    totalQuantityHTML.innerText = totalQuantity;
+    totalPriceHTML.innerText = 'Rs.' + totalPrice;
+}
+</script>
+
+</body>
+</html>
