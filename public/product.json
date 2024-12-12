@@ -1,0 +1,32 @@
+[
+    {
+        "name": "T-shirt",
+        "price": 300,
+        "image": "/img/T-shirt.png"
+    },
+    {
+        "name": "Shoes",
+        "price": 900,
+        "image": "/img/Shoes.png"
+    },
+    {
+        "name": "Jeans",
+        "price": 800,
+        "image": "/img/Jeans.png"
+    },
+    {
+        "name": "Shirt",
+        "price": 500,
+        "image": "/img/Shirt.png"
+    },
+    {
+        "name": "Men's Blazer",
+        "price": 1500,
+        "image": "/img/Blazer.png"
+    },
+    {
+        "name": "Kurta Dress",
+        "price": 1200,
+        "image": "/img/kurta-dress.png"
+    }
+]
