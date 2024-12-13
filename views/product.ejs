@@ -4,9 +4,6 @@
 	<meta charset="utf-8" />
 	<title>Razorpay Web-Integration</title>
 	<link rel="icon" href="/img/payment.png" type="image/x-icon">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-	<!--Inside index.html -->
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 	<style>
 body {
     font-family: 'Arial', sans-serif;
@@ -290,7 +287,7 @@ input[type="submit"]:hover {
 			<div class="buttons">
 				<div class="close">CLOSE</div>
 				<div class="checkout">
-					<a href="/Checkout">CHECKOUT</a>
+					<a href="/checkout.html">CHECKOUT</a>
 				</div>
 			</div>
 	</div>
@@ -430,56 +427,5 @@ function changeQuantity($idProduct, $type){
     document.cookie = "listCart=" + JSON.stringify(listCart) + "; expires=Thu, 31 Dec 2025 23:59:59 UTC; path=/;";
     // reload html view cart
     addCartToHTML();
-}
-
-$(document).ready(function(){
-	$('.pay-form').submit(function(e){
-		e.preventDefault();
-
-		var formData = $(this).serialize();
-
-		$.ajax({
-			url:"/createOrder",
-			type:"POST",
-			data: formData,
-			success:function(res){
-				if(res.success){
-					var options = {
-						"key": ""+res.key_id+"",
-						"amount": ""+res.amount+"",
-						"currency": "INR",
-						"name": ""+res.product_name+"",
-						"description": ""+res.description+"",
-						"image": "https://dummyimage.com/600x400/000/fff",
-						"order_id": ""+res.order_id+"",
-						"handler": function (response){
-							alert("Payment Succeeded");
-							// window.open("/","_self")
-						},
-						"prefill": {
-							"contact":""+res.contact+"",
-							"name": ""+res.name+"",
-							"email": ""+res.email+""
-						},
-						"notes" : {
-							"description":""+res.description+""
-						},
-						"theme": {
-							"color": "#2300a3"
-						}
-					};
-					var razorpayObject = new Razorpay(options);
-					razorpayObject.on('payment.failed', function (response){
-							alert("Payment Failed");
-					});
-					razorpayObject.open();
-				}
-				else{
-					alert(res.msg);
-				}
-			}
-		})
-
-	});
-});
+}				
 </script>

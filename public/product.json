@@ -37,20 +37,20 @@
     },
     {
         "id": 7,
-        "name": "Watch",
-        "price": 1100,
+        "name": "Men's Watch",
+        "price": 999,
         "image": "/img/Watch.png"
     },
     {
         "id": 8,
-        "name": "Belt for men",
-        "price": 200,
-        "image": "/img/belt.png"
+        "name": "Women's Watch",
+        "price": 499,
+        "image": "/img/Women_watch.png"
     },
     {
         "id": 9,
-        "name": "Sunglasses",
+        "name": "Hat",
         "price": 125,
-        "image": "/img/Sunglasses.png"
+        "image": "/img/Cap.png"
     }
 ]

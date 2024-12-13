@@ -16,7 +16,7 @@ const renderProductPage = async (req, res) => {
 
 const createOrder = async (req, res) => {
     try {
-        const amount = req.body.amount * 100; 
+        const amount = req.body.amount * 100;
         const options = {
             amount: amount,
             currency: 'INR',
@@ -31,11 +31,14 @@ const createOrder = async (req, res) => {
                     order_id: order.id,
                     amount: amount,
                     key_id: RAZORPAY_ID_KEY,
-                    product_name: req.body.name,
-                    description: req.body.description,
-                    contact: "9186789034",
-                    name: "Govind Choudhari",
-                    email: "govind@gmail.com"
+                    product_name: 'Product', // You can set a default product name
+                    description: 'Product Description', // You can set a default description
+                    contact: req.body.phone,
+                    name: req.body.name,
+                    email: req.body.email,
+                    address: req.body.address,
+                    country: req.body.country,
+                    city: req.body.city
                 });
             } else {
                 res.status(400).send({ success: false, msg: 'Something went wrong!' });
@@ -43,6 +46,7 @@ const createOrder = async (req, res) => {
         });
     } catch (error) {
         console.log(error.message);
+        res.status(500).send({ success: false, msg: 'Internal Server Error' });
     }
 };
 

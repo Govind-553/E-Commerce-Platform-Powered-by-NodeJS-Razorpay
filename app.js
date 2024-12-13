@@ -16,10 +16,7 @@ const viewsPath = path.join(__dirname, '../views');
 const paymentRoute = require('./routes/paymentRoute');
 app.use('/', paymentRoute);
 
-// Serve checkout-page
-app.get('/Checkout', (req, res) => {
-    res.sendFile(path.join(__dirname, '/Checkout', 'checkout.html'));
-});
+
 
 // Start the server
 const PORT = process.env.PORT || 3000;

@@ -10,10 +10,6 @@ payment_route.set('views', path.join(__dirname, '../views'));
 
 const paymentController = require('../controllers/paymentController');
 
-payment_route.get('/product', (req, res) => {
-    res.render('product');
-});
-
 payment_route.get('/', (req, res) => {
     res.render('product');
 });
