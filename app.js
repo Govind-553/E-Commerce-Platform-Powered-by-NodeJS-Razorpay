@@ -12,11 +12,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 const viewsPath = path.join(__dirname, '../views');
 
+// Serve chcekout page
+app.get('/checkout', (req, res) => {
+    res.sendFile(path.join(__dirname, '/checkout', 'checkout.html'));
+});
+
 // Import and use payment routes
 const paymentRoute = require('./routes/paymentRoute');
 app.use('/', paymentRoute);
-
-
 
 // Start the server
 const PORT = process.env.PORT || 3000;
