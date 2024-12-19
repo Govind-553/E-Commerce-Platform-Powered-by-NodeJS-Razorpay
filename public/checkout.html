@@ -261,8 +261,7 @@ a:active {
                 listCart = [];
             }
         } catch (e) {
-            // If JSON parsing fails, reset listCart to an empty array
-            listCart = [];
+            console.error("Error parsing listcart from cookie:", e);
         }
     }
 }
