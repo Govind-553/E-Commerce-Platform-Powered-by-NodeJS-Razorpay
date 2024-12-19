@@ -249,15 +249,23 @@ a:active {
         }
     }
 
-    let listCart = [];
     function checkCart() {
-        const cookieValue = document.cookie
-            .split('; ')
-            .find(row => row.startsWith('listCart='));
-        if (cookieValue) {
+    const cookieValue = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('listCart='));
+    if (cookieValue) {
+        try {
             listCart = JSON.parse(cookieValue.split('=')[1]);
+            // Ensure listCart is an array
+            if (!Array.isArray(listCart)) {
+                listCart = [];
+            }
+        } catch (e) {
+            // If JSON parsing fails, reset listCart to an empty array
+            listCart = [];
         }
     }
+}
 
     checkCart();
     addCartToHTML();
