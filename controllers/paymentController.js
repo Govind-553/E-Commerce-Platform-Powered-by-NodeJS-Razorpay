@@ -31,8 +31,8 @@ const createOrder = async (req, res) => {
                     order_id: order.id,
                     amount: amount,
                     key_id: RAZORPAY_ID_KEY,
-                    product_name: 'Product', // You can set a default product name
-                    description: 'Product Description', // You can set a default description
+                    product_name: 'Product',
+                    description: 'Product Description', 
                     contact: req.body.phone,
                     name: req.body.name,
                     email: req.body.email,

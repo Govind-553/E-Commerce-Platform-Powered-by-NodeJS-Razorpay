@@ -269,7 +269,7 @@ a:active {
     checkCart();
     addCartToHTML();
 
-    function addCartToHTML() {
+     function addCartToHTML() {
         const listCartHTML = document.querySelector('.returnCart .list');
         const totalQuantityHTML = document.querySelector('.totalQuantity');
         const totalPriceHTML = document.querySelector('.totalPrice');
@@ -314,10 +314,19 @@ a:active {
                 return;
             }
 
-            const formData = { name, email, phone, address, country, city, totalPrice };
+            const formData = {
+                name, 
+                email, 
+                phone, 
+                address, 
+                country, 
+                city, 
+                products: listCart, 
+                totalPrice
+            };
 
             $.ajax({
-                url: "/createOrder", 
+                url: "/payment/createOrder",
                 type: "POST",
                 contentType: "application/json",
                 data: JSON.stringify(formData),
@@ -333,6 +342,7 @@ a:active {
                             "order_id": res.order_id,
                             "handler": function (response) {
                                 alert("Payment Succeeded! Payment ID: " + response.razorpay_payment_id);
+                                window.location.href = "/payment-success"; 
                             },
                             "prefill": {
                                 "contact": res.contact,
