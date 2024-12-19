@@ -13,10 +13,6 @@ body {
 	overflow-x: hidden;
 }
 
-hr {
-	width: 95%;
-}
-
 .container {
 	width: 1200px;
 	margin: 120px auto;
@@ -25,7 +21,7 @@ hr {
 	border-radius: 8px;
 }
 header img {
-	width: 50px;
+    width: 50px;
 }
 
 header {
@@ -39,8 +35,21 @@ header {
     justify-content: space-between;
     z-index: 10;
     background-color: #f9f9f9;
-    padding: 8px 20px;
-	border-bottom: 2px solid #ddd;
+    padding: 0 20px;
+    border-bottom: 2px solid #ddd;
+}
+
+header h1 {
+    display: flex;
+    align-items: center;
+    font-size: 2em;
+    margin: 0;
+}
+
+header h1 img {
+    height: 75px;
+    width: auto;
+	margin-top: 22px;
 }
 
 header .iconCart {
@@ -66,7 +75,6 @@ header .totalQuantity {
     align-items: center;
     transition: transform 0.3s ease;
 }
-
 
 .listProduct {
 	margin-top: 60px;
