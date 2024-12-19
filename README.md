@@ -31,7 +31,3 @@ process involves creating an order via Razorpay and completing the transaction s
 * **Razorpay SDK:** Payment gateway integration.
 * **EJS:** Template engine for rendering pages.
 * **CSS:** Responsive and interactive styling.
-
-### 📸 Preview
-👉 Click below to visit the live demo!<br>
-Link: (https://razorpay-payment-hqcn.onrender.com/)
