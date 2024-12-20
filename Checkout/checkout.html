@@ -4,62 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout</title>
-	<link rel="icon" href="/img/cart.png" type="image/x-icon">
-<style>
+    <link rel="icon" href="/img/cart.png" type="image/x-icon">
+    <style>
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
 .checkoutLayout {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 50px;
     padding: 20px;
-    background-color: #F3F4F6;
 }
 
 .checkoutLayout .right {
-    background-color: #3B82F6;
+    background-color: #FFB74D; /* Different color for the right container */
     border-radius: 20px;
     padding: 40px;
     color: #FFFFFF;
-    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+    box-shadow: 0 8px 20px rgba(255, 183, 77, 0.4);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .checkoutLayout .right:hover {
     transform: scale(1.02);
-    box-shadow: 0 12px 30px rgba(59, 130, 246, 0.6);
-}
-
-.checkoutLayout .form {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-    border-bottom: 1px solid #E0E0E0;
-    padding-bottom: 20px;
-}
-
-.checkoutLayout .form input,
-.checkoutLayout .form select {
-    width: 100%;
-    padding: 10px 20px;
-    box-sizing: border-box;
-    border-radius: 20px;
-    margin-top: 10px;
-    border: none;
-    background-color: #F3F4F6;
-    color: #1F2937;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.checkoutLayout .form input:focus,
-.checkoutLayout .form select:focus {
-    background-color: #FFFFFF;
-    box-shadow: 0 0 8px #3B82F6;
-    outline: none;
-}
-
-.checkoutLayout .form h1,
-.checkoutLayout .form .group:nth-child(-n+2) {
-    grid-column-start: 1;
-    grid-column-end: 3;
+    box-shadow: 0 12px 30px rgba(255, 183, 77, 0.6);
 }
 
 .checkoutLayout .right .return .row {
@@ -79,7 +51,7 @@
     height: 50px;
     border: none;
     border-radius: 25px;
-    background-color: #10B981;
+    background-color: #4CAF50; /* Different color for button */
     font-weight: bold;
     color: #FFFFFF;
     text-transform: uppercase;
@@ -90,26 +62,26 @@
 }
 
 .buttonCheckout:hover {
-    background-color: #059669;
+    background-color: #388E3C;
     transform: translateY(-3px);
 }
 
 .buttonCheckout:active {
     transform: translateY(0);
-    background-color: #047857;
+    background-color: #2E7D32;
 }
 
 .returnCart .list .item {
-    display: grid;
-    grid-template-columns: 80px 1fr 50px 80px;
+    display: flex;
+    justify-content: space-between; 
     align-items: center;
-    gap: 20px;
     margin-bottom: 30px;
     padding: 10px 20px;
     border-radius: 20px;
     background-color: #FFFFFF;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 100%; 
 }
 
 .returnCart .list .item:hover {
@@ -149,106 +121,140 @@ a:hover {
 a:active {
     transform: scale(0.95);
 }
+.headerContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    border-bottom: 2px solid #ddd;
+}
+header h1 {
+    display: flex;
+    align-items: center;
+    font-size: 1.8em;
+	font-weight: bold;
+    margin: 0;
+}
 
+header h1 img {
+    height: 75px;
+    width: auto;
+	margin-top: 12px;
+    transition: transform 0.3s ease;
+}
+header h1 img:hover {
+    transform: scale(1.1);
+}
+nav {
+    display: flex;
+    gap: 15px;
+    font-size: 35px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #333;
+    padding: 6px 15px;
+    border-radius: 20px;
+    margin: 0 15px;
+    font-weight: 600;
+    background: transparent;
+    border: none;
+    font-size: 20px;
+}
+nav a:hover {
+    background: #333;
+    color: #fff;
+}
+footer {
+    background-color: #374151; /* Similar color for header and footer */
+    color: white;
+    text-align: center;
+    padding: 10px;
+    position: relative;
+    bottom: -25px;
+    width: 100%;
+}
+
+.summary {
+    background-color: #faa004;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+.summary:hover {
+    transform: translateY(-3px);
+}
+.deleteIcon {
+    cursor: pointer;
+    color: #333;
+    font-size: 24px;
+    margin-left: 10px; 
+    transition: color 0.3s ease;
+}
+
+.deleteIcon:hover {
+    color: #faa004;
+}
 </style>
 </head>
-<body> 
+
+<body>
+<header>
+    <div class="headerContainer">
+		 <h1><img src="/img/logo.png" alt="">CARTIFY</h1>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/">Keep Shopping</a>
+            <a href="/cart">Cart</a>
+        </nav>
+    </div>
+</header>
+
 <div class="container">
     <div class="checkoutLayout">    
         <div class="returnCart">
-            <a href="/">Keep shopping</a>
-            <h1>List Product in Cart</h1>
+            <h1>Products in Cart</h1>
             <div class="list">
                 <div class="item">
-                    <img src="img/T-shirt.png">
-                    <div class="info">
-                        <div class="name">T-shirt</div>
-                        <div class="price">Amount:- Rs.300/1 product</div>
-                    </div>
-                    <div class="quantity">5</div>
-                    <div class="returnPrice">Amount:- Rs.110</div>
-                </div>
+                  <img src="img/T-shirt.png" alt="T-shirt">
+                   <div class="info">
+                   <div class="name">T-shirt</div>
+                   <div class="price">Rs.300/1 product</div>
+                   </div>
+                   <div class="quantity">5</div>
+                   <div class="returnPrice">Amount: Rs.1500</div>
+                   <div class="deleteIcon" onclick="removeProduct(this)">×</div>
+                </div> 
+                <!-- Additional products can be added here -->
             </div>
         </div>
 
         <div class="right">
-            <h1>Checkout</h1>
-
-            <div class="form">
-                <div class="group">
-                    <label for="name">Full Name</label>
-                    <input type="text" name="name" id="name" placeholder="Enter your name" required>
-                </div>
-    
-                <div class="group">
-                    <label for="address">Address</label>
-                    <input type="text" name="address" id="address" placeholder="Enter your address..." required>
-                </div>
-
-                <div class="group">
-                    <label for="phone">Phone Number</label>
-                    <input type="text" name="phone" id="phone" placeholder="Enter your phone number" required>
-                </div>
-
-                <div class="group">
-                    <label for="email">Email</label>
-                    <input type="email" name="email" id="email" placeholder="Enter your email" required>
-                </div>
-    
-                <div class="group">
-                    <label for="country">Country</label>
-                    <select name="country" id="country" onchange="updateCityOptions()">
-                        <option value="">Choose..</option>
-                        <option value="India">India</option>
-                    </select>
-                </div>
-
-                <div class="group">
-                    <label for="city">City</label>
-                    <select name="city" id="city">
-                        <option value="">Choose..</option>
-                    </select>
+            <h1>Cart Summary</h1>
+            <div class="summary">
+                <div class="return">
+                    <div class="row">
+                        <div>Total Quantity</div>
+                        <div class="totalQuantity">70</div>
+                    </div>
+                    <div class="row">
+                        <div>Total Price</div>
+                        <div class="totalPrice">Amount: Rs.900</div>
+                    </div>
                 </div>
             </div>
-            <div class="return">
-                <div class="row">
-                    <div>Total Quantity</div>
-                    <div class="totalQuantity">70</div>
-                </div>
-                <div class="row">
-                    <div>Total Price</div>
-                    <div class="totalPrice">Amount:- Rs.900</div>
-                </div>
-            </div>
-            <button type="submit" class="buttonCheckout" id="checkout-button">CHECKOUT</button>
+            <button type="submit" class="buttonCheckout" id="checkout-button">PROCEED TO CHECKOUT</button>
         </div>
     </div>
 </div>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<footer>
+    <p>&copy; 2024 CARTIFY. All rights reserved.</p>
+</footer>
+
 <script>
-    const statesInIndia = [
-        "Mumbai", "Amritsar", "Chandigarh", "Patna", "Dehradun", "Delhi", "Goa",
-        "Ahmedabad", "Bangalore", "Kanpur", "Pune", "Lucknow", "Jaipur", "Chennai",
-        "Hyderabad", "Kolkata", "Assam", "Jammu & Kashmir"
-    ];
-
-    function updateCityOptions() {
-        const country = document.getElementById("country").value;
-        const cityDropdown = document.getElementById("city");
-        cityDropdown.innerHTML = '<option value="">Choose..</option>';
-
-        if (country === "India") {
-            statesInIndia.forEach((state) => {
-                const option = document.createElement("option");
-                option.value = state;
-                option.textContent = state;
-                cityDropdown.appendChild(option);
-            });
-        }
-    }
-
     function checkCart() {
     const cookieValue = document.cookie
         .split('; ')
@@ -265,7 +271,6 @@ a:active {
         }
     }
 }
-
     checkCart();
     addCartToHTML();
 
@@ -290,7 +295,8 @@ a:active {
                             <div class="price">Rs.${product.price}/1 product</div>
                         </div>
                         <div class="quantity">${product.quantity}</div>
-                        <div class="returnPrice">Amount: Rs.${product.price * product.quantity}</div>`;
+                        <div class="returnPrice">Amount: Rs.${product.price * product.quantity}</div>
+                        <div class="deleteIcon" onclick="removeProduct(this)">×</div>`; 
                     listCartHTML.appendChild(newCart);
                     totalQuantity += product.quantity;
                     totalPrice += (product.price * product.quantity);
@@ -300,77 +306,12 @@ a:active {
 
         totalQuantityHTML.innerText = totalQuantity;
         totalPriceHTML.innerText = 'Rs.' + totalPrice;
-
-        document.getElementById('checkout-button').onclick = function () {
-            const name = document.getElementById('name').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const phone = document.getElementById('phone').value.trim();
-            const address = document.getElementById('address').value.trim();
-            const country = document.getElementById('country').value.trim();
-            const city = document.getElementById('city').value.trim();
-
-            if (!name || !email || !phone || !address || !country || !city) {
-                alert("All fields are required!");
-                return;
-            }
-
-            const formData = {
-                name, 
-                email, 
-                phone, 
-                address, 
-                country, 
-                city, 
-                products: listCart, 
-                totalPrice
-            };
-
-            $.ajax({
-                url: "/payment/createOrder",
-                type: "POST",
-                contentType: "application/json",
-                data: JSON.stringify(formData),
-                success: function (res) {
-                    if (res.success) {
-                        const options = {
-                            "key": res.key_id,
-                            "amount": res.amount,
-                            "currency": "INR",
-                            "name": res.product_name,
-                            "description": res.description,
-                            "image": "https://dummyimage.com/600x400/000/fff",
-                            "order_id": res.order_id,
-                            "handler": function (response) {
-                                alert("Payment Succeeded! Payment ID: " + response.razorpay_payment_id);
-                                window.location.href = "/payment-success"; 
-                            },
-                            "prefill": {
-                                "contact": res.contact,
-                                "name": res.name,
-                                "email": res.email
-                            },
-                            "notes": {
-                                "description": res.description
-                            },
-                            "theme": {
-                                "color": "#2300a3"
-                            }
-                        };
-                        const razorpayObject = new Razorpay(options);
-                        razorpayObject.on('payment.failed', function (response) {
-                            alert("Payment Failed: " + response.error.description);
-                        });
-                        razorpayObject.open();
-                    } else {
-                        alert(res.msg);
-                    }
-                },
-                error: function (err) {
-                    alert("An error occurred while creating the order. Please try again.");
-                }
-            });
-        };
     }
+
+    function removeProduct(element) {
+    const item = element.parentElement;
+    item.remove();
+}
 </script>
 
 </body>
