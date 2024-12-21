@@ -21,14 +21,15 @@ body {
 }
 
 .checkoutLayout .right {
-    background-color: #FFB74D; /* Different color for the right container */
+    background-color: #FFB74D;
     border-radius: 20px;
     padding: 40px;
     color: #FFFFFF;
     box-shadow: 0 8px 20px rgba(255, 183, 77, 0.4);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 460px;
+    overflow-y: auto;
 }
-
 .checkoutLayout .right:hover {
     transform: scale(1.02);
     box-shadow: 0 12px 30px rgba(255, 183, 77, 0.6);
@@ -51,7 +52,7 @@ body {
     height: 50px;
     border: none;
     border-radius: 25px;
-    background-color: #4CAF50; /* Different color for button */
+    background-color: #4CAF50;
     font-weight: bold;
     color: #FFFFFF;
     text-transform: uppercase;
@@ -167,12 +168,13 @@ nav a:hover {
     color: #fff;
 }
 footer {
-    background-color: #374151; /* Similar color for header and footer */
+    background-color: #374151;
     color: white;
     text-align: center;
     padding: 10px;
-    position: relative;
-    bottom: -25px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
     width: 100%;
 }
 
@@ -197,6 +199,50 @@ footer {
 .deleteIcon:hover {
     color: #faa004;
 }
+.promoCode {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.promoCode h2 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.promoCode p {
+    font-size: 1em;
+    margin-bottom: 15px;
+}
+
+.promoInput {
+    display: flex;
+    gap: 10px;
+}
+
+.promoInput input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+}
+
+.promoInput button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-left: 10px;
+}
+
+.promoInput button:hover {
+    background-color: #388E3C;
+}
+
+
 </style>
 </head>
 
@@ -225,7 +271,7 @@ footer {
                    </div>
                    <div class="quantity">5</div>
                    <div class="returnPrice">Amount: Rs.1500</div>
-                   <div class="deleteIcon" onclick="removeProduct(this)">×</div>
+                   <div class="deleteIcon" onclick="removeProduct(this, '${product.id}')">×</div>
                 </div> 
                 <!-- Additional products can be added here -->
             </div>
@@ -246,6 +292,14 @@ footer {
                 </div>
             </div>
             <button type="submit" class="buttonCheckout" id="checkout-button">PROCEED TO CHECKOUT</button>
+    <div class="promoCode">
+            <h2>Have a Promo Code?</h2>
+            <p>Enter your promo code below to receive a discount on your order.</p>
+        <div class="promoInput">
+            <input type="text" id="promoCode" placeholder="Enter promo code" aria-label="Promo Code">
+            <button type="button" id="submitPromo" onclick="applyPromoCode()">Submit</button>
+        </div>
+    </div>
         </div>
     </div>
 </div>
@@ -256,25 +310,28 @@ footer {
 
 <script>
     function checkCart() {
-    const cookieValue = document.cookie
-        .split('; ')
-        .find(row => row.startsWith('listCart='));
-    if (cookieValue) {
-        try {
-            listCart = JSON.parse(cookieValue.split('=')[1]);
-            // Ensure listCart is an array
-            if (!Array.isArray(listCart)) {
-                listCart = [];
+        const cookieValue = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('listCart='));
+        if (cookieValue) {
+            try {
+                listCart = JSON.parse(cookieValue.split('=')[1]);
+                // Ensure listCart is an object
+                if (typeof listCart !== 'object') {
+                    listCart = {};
+                }
+            } catch (e) {
+                console.error("Error parsing listCart from cookie:", e);
+                listCart = {};
             }
-        } catch (e) {
-            console.error("Error parsing listcart from cookie:", e);
+        } else {
+            listCart = {};
         }
     }
-}
     checkCart();
     addCartToHTML();
 
-     function addCartToHTML() {
+    function addCartToHTML() {
         const listCartHTML = document.querySelector('.returnCart .list');
         const totalQuantityHTML = document.querySelector('.totalQuantity');
         const totalPriceHTML = document.querySelector('.totalPrice');
@@ -283,36 +340,45 @@ footer {
         let totalQuantity = 0;
         let totalPrice = 0;
 
-        if (listCart) {
-            listCart.forEach(product => {
-                if (product) {
-                    const newCart = document.createElement('div');
-                    newCart.classList.add('item');
-                    newCart.innerHTML = 
-                        `<img src="${product.image}">
-                        <div class="info">
-                            <div class="name">${product.name}</div>
-                            <div class="price">Rs.${product.price}/1 product</div>
-                        </div>
-                        <div class="quantity">${product.quantity}</div>
-                        <div class="returnPrice">Amount: Rs.${product.price * product.quantity}</div>
-                        <div class="deleteIcon" onclick="removeProduct(this)">×</div>`; 
-                    listCartHTML.appendChild(newCart);
-                    totalQuantity += product.quantity;
-                    totalPrice += (product.price * product.quantity);
-                }
-            });
+        for (const id in listCart) {
+            const product = listCart[id];
+            if (product) {
+                const newCart = document.createElement('div');
+                newCart.classList.add('item');
+                newCart.innerHTML = 
+                    `<img src="${product.image}">
+                    <div class="info">
+                        <div class="name">${product.name}</div>
+                        <div class="price">Rs.${product.price}/1 product</div>
+                    </div>
+                    <div class="quantity">${product.quantity}</div>
+                    <div class="returnPrice">Amount: Rs.${product.price * product.quantity}</div>
+                    <div class="deleteIcon" onclick="removeProduct(this, '${id}')">×</div>`; 
+                listCartHTML.appendChild(newCart);
+                totalQuantity += product.quantity;
+                totalPrice += (product.price * product.quantity);
+            }
         }
 
         totalQuantityHTML.innerText = totalQuantity;
         totalPriceHTML.innerText = 'Rs.' + totalPrice;
     }
 
-    function removeProduct(element) {
-    const item = element.parentElement;
-    item.remove();
-}
+    // Function to remove product from cart
+    function removeProduct(element, idProduct) {
+        const item = element.parentElement;
+        item.remove();
+
+        // Remove product from listCart
+        delete listCart[idProduct];
+
+        // Update the cookie with the new cart
+        document.cookie = "listCart=" + JSON.stringify(listCart) + "; path=/";
+
+        addCartToHTML();
+    }
 </script>
+
 
 </body>
 </html>
