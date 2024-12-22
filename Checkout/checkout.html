@@ -214,34 +214,38 @@ footer {
     font-size: 1em;
     margin-bottom: 15px;
 }
-
 .promoInput {
-    display: flex;
-    gap: 10px;
+    position: relative;
+    width: 100%;
+    max-width: 500px;
 }
 
 .promoInput input {
-    flex: 1;
-    padding: 10px;
-    border: none;
+    width: 100%;
+    padding: 10px 80px 10px 10px;
+    outline: 0;
+    border: 0;
     border-radius: 5px;
+    box-sizing: border-box;
 }
 
 .promoInput button {
-    padding: 10px 20px;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
     background-color: #4CAF50;
     color: white;
     border: none;
+    padding: 10px 35px;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    margin-left: 10px;
 }
 
 .promoInput button:hover {
     background-color: #388E3C;
 }
-
 
 </style>
 </head>
@@ -297,7 +301,7 @@ footer {
             <p>Enter your promo code below to receive a discount on your order.</p>
         <div class="promoInput">
             <input type="text" id="promoCode" placeholder="Enter promo code" aria-label="Promo Code">
-            <button type="button" id="submitPromo" onclick="applyPromoCode()">Submit</button>
+            <button type="button" id="submitPromo">Submit</button>
         </div>
     </div>
         </div>
