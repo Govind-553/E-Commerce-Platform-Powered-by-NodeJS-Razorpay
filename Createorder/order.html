@@ -61,87 +61,157 @@ nav a:hover {
 .checkoutLayout {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 50px;
+    gap: 80px;
     padding: 20px;
 }
 
-.checkoutLayout .right {
-    background-color: #FFB74D;
-    border-radius: 20px;
-    padding: 40px;
-    color: #FFFFFF;
-    box-shadow: 0 8px 20px rgba(255, 183, 77, 0.4);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    height: 460px;
-    overflow-y: auto;
-}
-.checkoutLayout .right:hover {
-    transform: scale(1.02);
-    box-shadow: 0 12px 30px rgba(255, 183, 77, 0.6);
+.checkoutLayout .form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    min-height: 450px;
 }
 
-.checkoutLayout .right .return .row {
+.checkoutLayout .form h1,
+.checkoutLayout .form .group:nth-child(-n+3) {
+    grid-column-start: 1;
+    grid-column-end: 3;
+}
+
+.checkoutLayout .form .group {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 10px;
+    flex-direction: column;
 }
 
-.checkoutLayout .right .return .row div:nth-child(2) {
-    font-weight: bold;
-    font-size: x-large;
-}
-
-.buttonCheckout {
-    width: 100%;
-    height: 50px;
-    border: none;
-    border-radius: 25px;
-    background-color: #4CAF50;
-    font-weight: bold;
-    color: #FFFFFF;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-top: 20px;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-    cursor: pointer;
-}
-
-.buttonCheckout:hover {
-    background-color: #388E3C;
-    transform: translateY(-3px);
-}
-
-.buttonCheckout:active {
-    transform: translateY(0);
-    background-color: #2E7D32;
+.checkoutLayout .form label {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #333;
 }
 
 .checkoutLayout .form input,
 .checkoutLayout .form select {
     width: 100%;
-    padding: 10px 20px;
+    padding: 10px 15px;
     box-sizing: border-box;
-    border-radius: 20px;
-    margin-top: 10px;
-    border: none;
-    background-color: #F3F4F6;
-    color: #1F2937;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    color: #333;
+    font-size: 14px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .checkoutLayout .form input:focus,
 .checkoutLayout .form select:focus {
-    background-color: #FFFFFF;
-    box-shadow: 0 0 8px #3B82F6;
+    box-shadow: 0 0 8px orange;
     outline: none;
 }
 
-.checkoutLayout .form h1,
-.checkoutLayout .form .group:nth-child(-n+2) {
-    grid-column-start: 1;
-    grid-column-end: 3;
+.checkoutLayout .form input::placeholder {
+    color: #bbb;
+    font-size: 14px;
 }
+
+.checkoutLayout .form select {
+    appearance: none;
+    cursor: pointer;
+}
+.right {
+    background-color: #ffff;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.right h1 {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin: 30px 20px 10px 10px;
+    color: #333;
+}
+
+.summary {
+    margin-bottom: 20px;
+}
+
+.return {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 15px;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.row:last-child {
+    border-bottom: none;
+}
+
+.totalQuantity, .totalPrice {
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.payment-container {
+    margin-top: 15px;
+}
+
+.payment-methods {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 15px;
+}
+.payment-methods h1{
+    font-size: 1.5em;
+    margin-left: -4px;
+}
+
+.payment-methods label {
+    font-size: 16px;
+}
+
+.payment-methods input[type="radio"] {
+    margin-right: 5px;
+}
+.payment-methods .COD {
+    background-color: #fff;
+    padding: 15px;
+    border: 1px solid #333;
+    margin: 20px 0;
+}
+.payment-methods .razorpay-payment {
+    background-color: #fff;
+    padding: 15px;
+    border: 1px solid #333;
+}
+
+.order-button-container {
+    margin-top: 15px;
+}
+
+.order-button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.order-button:hover {
+    background-color: #218838;
+}
+
 footer {
     background-color: #374151;
     color: white;
@@ -152,13 +222,12 @@ footer {
     left: 0;
     width: 100%;
 }
-
     </style>
 </head>
 <body>
 <header>
     <div class="headerContainer">
-		 <h1><img src="/img/logo.png" alt="">CARTIFY</h1>
+        <h1><img src="/img/logo.png" alt="">CARTIFY</h1>
         <nav>
             <a href="/">Home</a>
             <a href="/">Keep Shopping</a>
@@ -170,40 +239,41 @@ footer {
 <div class="container">
     <div class="checkoutLayout">    
         <div class="form">
-                <div class="group">
-                    <label for="name">Full Name</label>
-                    <input type="text" name="name" id="name" placeholder="Enter your name" required>
-                </div>
+            <h1>Delivery Information</h1>
+            <div class="group">
+                <label for="name">Full Name</label>
+                <input type="text" name="name" id="name" placeholder="Enter your name" required>
+            </div>
     
-                <div class="group">
-                    <label for="address">Address</label>
-                    <input type="text" name="address" id="address" placeholder="Enter your address..." required>
-                </div>
+            <div class="group">
+                <label for="address">Address</label>
+                <input type="text" name="address" id="address" placeholder="Enter your address..." required>
+            </div>
 
-                <div class="group">
-                    <label for="phone">Phone Number</label>
-                    <input type="text" name="phone" id="phone" placeholder="Enter your phone number" required>
-                </div>
+            <div class="group">
+                <label for="phone">Phone Number</label>
+                <input type="text" name="phone" id="phone" placeholder="Enter your phone number" required>
+            </div>
 
-                <div class="group">
-                    <label for="email">Email</label>
-                    <input type="email" name="email" id="email" placeholder="Enter your email" required>
-                </div>
+            <div class="group">
+                <label for="email">Email</label>
+                <input type="email" name="email" id="email" placeholder="Enter your email" required>
+            </div>
     
-                <div class="group">
-                    <label for="country">Country</label>
-                    <select name="country" id="country" onchange="updateCityOptions()">
-                        <option value="">Choose..</option>
-                        <option value="India">India</option>
-                    </select>
-                </div>
+            <div class="group">
+                <label for="country">Country</label>
+                <select name="country" id="country" onchange="updateCityOptions()">
+                    <option value="">Choose..</option>
+                    <option value="India">India</option>
+                </select>
+            </div>
 
-                <div class="group">
-                    <label for="city">City</label>
-                    <select name="city" id="city">
-                        <option value="">Choose..</option>
-                    </select>
-                </div>
+            <div class="group">
+                <label for="city">City</label>
+                <select name="city" id="city">
+                    <option value="">Choose..</option>
+                </select>
+            </div>
         </div>
 
         <div class="right">
@@ -220,6 +290,23 @@ footer {
                     </div>
                 </div>
             </div>
+            <div class="payment-container">
+                <div class="payment-methods">
+                    <h1>Payment Method</h1>
+                    <div class="COD">
+                        <input type="radio" name="payment-method" id="standard" value="standard" required onclick="toggleButton()">
+                        <label for="payment-method">COD Cash on Delivery</label>
+                    </div>
+                    <div class="razorpay-payment">
+                        <input type="radio" name="payment-method" id="express" value="express" onclick="toggleButton()">
+                        <label for="payment-method">Razorpay</label>
+                    </div>
+                </div>
+                <div id="order-button-container" class="order-button-container">
+                    <button id="place-order" class="order-button" style="display: none;">Place Order</button>
+                    <button id="pay-now" class="order-button" style="display: none;">Pay Now</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -227,10 +314,9 @@ footer {
 <footer>
     <p>&copy; 2024 CARTIFY. All rights reserved.</p>
 </footer>
-</body>
-</html>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
-     const statesInIndia = [
+    const statesInIndia = [
         "Mumbai", "Amritsar", "Chandigarh", "Patna", "Dehradun", "Delhi", "Goa",
         "Ahmedabad", "Bangalore", "Kanpur", "Pune", "Lucknow", "Jaipur", "Chennai",
         "Hyderabad", "Kolkata", "Assam", "Jammu & Kashmir"
@@ -250,4 +336,83 @@ footer {
             });
         }
     }
+
+    function toggleButton() {
+        const codButton = document.getElementById("place-order");
+        const razorpayButton = document.getElementById("pay-now");
+        const standard = document.getElementById("standard");
+        const express = document.getElementById("express");
+
+        if (standard.checked) {
+            codButton.style.display = "block";
+            razorpayButton.style.display = "none";
+        } else if (express.checked) {
+            codButton.style.display = "none";
+            razorpayButton.style.display = "block";
+        }
+    }
+
+    window.addEventListener("load", function() {
+        // Get cart summary from localStorage
+        const cartSummary = JSON.parse(localStorage.getItem("cartSummary"));
+
+        if (cartSummary) {
+            const totalQuantityHTML = document.querySelector('.totalQuantity');
+            const totalPriceHTML = document.querySelector('.totalPrice');
+
+            totalQuantityHTML.innerText = cartSummary.totalQuantity;
+            totalPriceHTML.innerText = 'Amount: Rs.' + cartSummary.totalPrice;
+        }
+    });
+
+    // Razorpay Payment Initiation
+    function initiateRazorpayPayment(amount) {
+        var options = {
+            "key": "your_razorpay_key_here", // Replace with your Razorpay key
+            "amount": amount * 100, // Razorpay expects the amount in paise (1 Rs = 100 paise)
+            "currency": "INR",
+            "name": "CARTIFY",
+            "description": "Order Payment",
+            "image": "/img/logo.png",
+            "handler": function (response) {
+                alert("Payment Successful! Payment ID: " + response.razorpay_payment_id);
+                // Logic to store the order in the "My Orders" page (you can save it in the database)
+            },
+            "theme": {
+                "color": "#F37254"
+            }
+        };
+
+        var rzp1 = new Razorpay(options);
+        rzp1.open();
+    }
+
+    // Handle Place Order for COD
+    function handleCODOrder() {
+        alert("Your order has been placed successfully via Cash on Delivery!");
+        // Logic to store the order in the "My Orders" page
+    }
+
+    // Event listener for "Place Order" (COD)
+    document.getElementById("place-order").addEventListener("click", function () {
+        handleCODOrder();
+    });
+
+    // Event listener for "Pay Now" (Razorpay)
+    document.getElementById("pay-now").addEventListener("click", function () {
+        const totalPrice = parseFloat(document.querySelector('.totalPrice').innerText.replace("Amount: Rs.", ""));
+        // Fetching user details from form fields
+        const name = document.getElementById("name").value;
+        const email = document.getElementById("email").value;
+        const phone = document.getElementById("phone").value;
+
+        if (name && email && phone) {
+            // Proceed with Razorpay payment
+            initiateRazorpayPayment(totalPrice);
+        } else {
+            alert("Please fill in all the fields.");
+        }
+    });
 </script>
+</body>
+</html>

@@ -17,6 +17,11 @@ app.get('/checkout', (req, res) => {
     res.sendFile(path.join(__dirname, '/checkout', 'checkout.html'));
 });
 
+// Serve orders page
+app.get('/createorder', (req, res) => {
+    res.sendFile(path.join(__dirname, '/createorder', 'order.html'));
+});
+
 // Import and use payment routes
 const paymentRoute = require('./routes/paymentRoute');
 app.use('/', paymentRoute);

@@ -368,21 +368,34 @@ footer {
         totalPriceHTML.innerText = 'Rs.' + totalPrice;
     }
 
-    // Function to remove product from cart
     function removeProduct(element, idProduct) {
         const item = element.parentElement;
         item.remove();
 
-        // Remove product from listCart
         delete listCart[idProduct];
 
-        // Update the cookie with the new cart
         document.cookie = "listCart=" + JSON.stringify(listCart) + "; path=/";
 
         addCartToHTML();
     }
+    document.getElementById("checkout-button").addEventListener("click", function() {
+    let totalQuantity = 0;
+    let totalPrice = 0;
+
+    for (const id in listCart) {
+        const product = listCart[id];
+        if (product) {
+            totalQuantity += product.quantity;
+            totalPrice += product.price * product.quantity;
+        }
+    }
+
+    localStorage.setItem("cartSummary", JSON.stringify({ totalQuantity, totalPrice }));
+
+    // Redirect to the order page
+    window.location.href = "/createorder";
+});
+
 </script>
-
-
 </body>
 </html>
