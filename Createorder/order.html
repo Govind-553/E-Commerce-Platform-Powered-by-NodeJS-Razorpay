@@ -223,6 +223,7 @@ footer {
     width: 100%;
 }
     </style>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
 <body>
 <header>
@@ -310,109 +311,105 @@ footer {
         </div>
     </div>
 </div>
-
 <footer>
     <p>&copy; 2024 CARTIFY. All rights reserved.</p>
 </footer>
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
 <script>
-    const statesInIndia = [
-        "Mumbai", "Amritsar", "Chandigarh", "Patna", "Dehradun", "Delhi", "Goa",
-        "Ahmedabad", "Bangalore", "Kanpur", "Pune", "Lucknow", "Jaipur", "Chennai",
-        "Hyderabad", "Kolkata", "Assam", "Jammu & Kashmir"
-    ];
+        const statesInIndia = [
+            "Mumbai", "Amritsar", "Chandigarh", "Patna", "Dehradun", "Delhi", "Goa",
+            "Ahmedabad", "Bangalore", "Kanpur", "Pune", "Lucknow", "Jaipur", "Chennai",
+            "Hyderabad", "Kolkata", "Assam", "Jammu & Kashmir"
+        ];
 
-    function updateCityOptions() {
-        const country = document.getElementById("country").value;
-        const cityDropdown = document.getElementById("city");
-        cityDropdown.innerHTML = '<option value="">Choose..</option>';
+        function updateCityOptions() {
+            const country = document.getElementById("country").value;
+            const cityDropdown = document.getElementById("city");
+            cityDropdown.innerHTML = '<option value="">Choose...</option>';
 
-        if (country === "India") {
-            statesInIndia.forEach((state) => {
-                const option = document.createElement("option");
-                option.value = state;
-                option.textContent = state;
-                cityDropdown.appendChild(option);
-            });
-        }
-    }
-
-    function toggleButton() {
-        const codButton = document.getElementById("place-order");
-        const razorpayButton = document.getElementById("pay-now");
-        const standard = document.getElementById("standard");
-        const express = document.getElementById("express");
-
-        if (standard.checked) {
-            codButton.style.display = "block";
-            razorpayButton.style.display = "none";
-        } else if (express.checked) {
-            codButton.style.display = "none";
-            razorpayButton.style.display = "block";
-        }
-    }
-
-    window.addEventListener("load", function() {
-        // Get cart summary from localStorage
-        const cartSummary = JSON.parse(localStorage.getItem("cartSummary"));
-
-        if (cartSummary) {
-            const totalQuantityHTML = document.querySelector('.totalQuantity');
-            const totalPriceHTML = document.querySelector('.totalPrice');
-
-            totalQuantityHTML.innerText = cartSummary.totalQuantity;
-            totalPriceHTML.innerText = 'Amount: Rs.' + cartSummary.totalPrice;
-        }
-    });
-
-    // Razorpay Payment Initiation
-    function initiateRazorpayPayment(amount) {
-        var options = {
-            "key": "your_razorpay_key_here", // Replace with your Razorpay key
-            "amount": amount * 100, // Razorpay expects the amount in paise (1 Rs = 100 paise)
-            "currency": "INR",
-            "name": "CARTIFY",
-            "description": "Order Payment",
-            "image": "/img/logo.png",
-            "handler": function (response) {
-                alert("Payment Successful! Payment ID: " + response.razorpay_payment_id);
-                // Logic to store the order in the "My Orders" page (you can save it in the database)
-            },
-            "theme": {
-                "color": "#F37254"
+            if (country === "India") {
+                statesInIndia.forEach((state) => {
+                    const option = document.createElement("option");
+                    option.value = state;
+                    option.textContent = state;
+                    cityDropdown.appendChild(option);
+                });
             }
-        };
-
-        var rzp1 = new Razorpay(options);
-        rzp1.open();
-    }
-
-    // Handle Place Order for COD
-    function handleCODOrder() {
-        alert("Your order has been placed successfully via Cash on Delivery!");
-        // Logic to store the order in the "My Orders" page
-    }
-
-    // Event listener for "Place Order" (COD)
-    document.getElementById("place-order").addEventListener("click", function () {
-        handleCODOrder();
-    });
-
-    // Event listener for "Pay Now" (Razorpay)
-    document.getElementById("pay-now").addEventListener("click", function () {
-        const totalPrice = parseFloat(document.querySelector('.totalPrice').innerText.replace("Amount: Rs.", ""));
-        // Fetching user details from form fields
-        const name = document.getElementById("name").value;
-        const email = document.getElementById("email").value;
-        const phone = document.getElementById("phone").value;
-
-        if (name && email && phone) {
-            // Proceed with Razorpay payment
-            initiateRazorpayPayment(totalPrice);
-        } else {
-            alert("Please fill in all the fields.");
         }
-    });
-</script>
+
+        function toggleButton() {
+            const codButton = document.getElementById("place-order");
+            const razorpayButton = document.getElementById("pay-now");
+            const standard = document.getElementById("standard");
+            const express = document.getElementById("express");
+
+            if (standard.checked) {
+                codButton.style.display = "block";
+                razorpayButton.style.display = "none";
+            } else if (express.checked) {
+                codButton.style.display = "none";
+                razorpayButton.style.display = "block";
+            }
+        }
+
+        window.addEventListener("load", function() {
+            const cartSummary = JSON.parse(localStorage.getItem("cartSummary"));
+            if (cartSummary) {
+                document.querySelector('.totalQuantity').innerText = cartSummary.totalQuantity;
+                document.querySelector('.totalPrice').innerText = 'Amount: Rs.' + cartSummary.totalPrice;
+            }
+        });
+
+        function initiateRazorpayPayment(amount) {
+            fetch('/get-razorpay-key')
+                .then(response => response.json())
+                .then(data => {
+                    fetch('/create-order', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ amount, currency: 'INR' })
+                    })
+                        .then(response => response.json())
+                        .then(order => {
+                            var options = {
+                                "key": data.key_id,
+                                "amount": order.amount,
+                                "currency": order.currency,
+                                "order_id": order.id,
+                                "name": "CARTIFY",
+                                "description": "Order Payment",
+                                "image": "/img/logo.png",
+                                "handler": function (response) {
+                                    alert("Payment Successful! Payment ID: " + response.razorpay_payment_id);
+                                },
+                                "theme": {
+                                    "color": "#2300a3"
+                                }
+                            };
+                            var rzp1 = new Razorpay(options);
+                            rzp1.open();
+                        })
+                        .catch(error => console.error('Error initiating payment:', error));
+                })
+                .catch(error => console.error('Error fetching Razorpay key:', error));
+        }
+
+        document.getElementById("pay-now").addEventListener("click", function () {
+            const totalPrice = parseFloat(document.querySelector('.totalPrice').innerText.replace("Amount: Rs.", ""));
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email").value;
+            const phone = document.getElementById("phone").value;
+
+            if (name && email && phone) {
+                initiateRazorpayPayment(totalPrice);
+            } else {
+                alert("Please fill in all the fields.");
+            }
+        });
+
+        document.getElementById("place-order").addEventListener("click", function () {
+            alert("Your order has been placed successfully via Cash on Delivery!");
+        });
+    </script>
 </body>
 </html>
