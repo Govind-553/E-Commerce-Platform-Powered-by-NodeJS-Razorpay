@@ -3,54 +3,63 @@
         "id": 1,
         "name": "T-shirt",
         "price": 300,
-        "image": "/img/T-shirt.png"
+        "image": "/img/T-shirt.png",
+        "category": "Topwear"
     },
     {
         "id": 2,
         "name": "Shoes",
         "price": 900,
-        "image": "/img/Shoes.png"
+        "image": "/img/Shoes.png",
+        "category": "Accessories"
     },
     {
         "id": 3,
         "name": "Jeans",
         "price": 800,
-        "image": "/img/Jeans.png"
+        "image": "/img/Jeans.png",
+        "category": "Bottomwear"
     },
     {
         "id": 4,
         "name": "Shirt",
         "price": 500,
-        "image": "/img/Shirt.png"
+        "image": "/img/Shirt.png",
+        "category": "Topwear"
     },
     {
         "id": 5,
         "name": "Men's Blazer",
         "price": 1500,
-        "image": "/img/Blazer.png"
+        "image": "/img/Blazer.png",
+        "category": "Jacket"
     },
     {
         "id": 6,
         "name": "Kurta Dress",
         "price": 1200,
-        "image": "/img/kurta-dress.png"
+        "image": "/img/kurta-dress.png",
+        "category": "Wedding-wear"
     },
     {
         "id": 7,
         "name": "Men's Watch",
         "price": 999,
-        "image": "/img/Watch.png"
+        "image": "/img/Watch.png",
+        "category": "Accessories"
     },
     {
         "id": 8,
         "name": "Women's Watch",
         "price": 499,
-        "image": "/img/Women_watch.png"
+        "image": "/img/Women_watch.png",
+        "category": "Accessories"
     },
     {
         "id": 9,
         "name": "Hat",
         "price": 125,
-        "image": "/img/Cap.png"
+        "image": "/img/Cap.png",
+        "category": "Accessories"
     }
 ]

@@ -207,22 +207,42 @@ img {
 .cart .buttons .checkout{
 	background-color: #e8bc0e;
 }
-
-input[type="submit"] {
-    background-color: #007bff;
-    color: #ffffff;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
+#search-container {
+	margin: 1em 0 2em;
 }
-
-input[type="submit"]:hover {
-    background-color: #0056b3;
+#search-container input {
+    background-color: transparent;
+	width: 40%;
+	border: none;
+	border-bottom: 2px solid #110f29;
+	padding: 1em 0.5em;
 }
-
+#search-container input:focus{
+	outline: none;
+	border-bottom-color: #6759ff;
+}
+#search-container button {
+	padding: 1em 3.5em;
+	margin-left: 1em;
+	background-color: #6759ff;
+	color: #fff;
+	border: 0;
+	border-radius: 5px;
+	margin-top: 0.5em;
+	cursor: pointer;
+}
+.button-value {
+	border: 2px solid #6759ff;
+	padding: 1em 2.2em;
+	border-radius: 3em;
+	background-color: transparent;
+	color: #6759ff;
+	cursor: pointer;
+}
+.active {
+	background-color: #6759ff;
+	color: #fff;
+}
 	</style>
 </head>
 <body>
@@ -233,7 +253,19 @@ input[type="submit"]:hover {
 				<div class="totalQuantity">0</div>
 			</div>
 	</header>
-	<div class="container">
+<div class="container">
+	<div id="search-container">
+       <input type="search" id="search-input" placeholder="Search product names here...">
+	   <button type="submit" id="search-button">Search</button>
+	</div>
+	<div id="buttons">
+		<button class="button-value">All</button>
+		<button class="button-value">Topwear</button>	
+		<button class="button-value">Bottomwear</button>	
+		<button class="button-value">Jacket</button>	
+		<button class="button-value">Wedding-Wear</button>	
+		<button class="button-value">Accessories</button>
+	</div>
 	<div class="listProduct">
 		<div class="item">
 			<img src="/img/T-shirt.png">
@@ -441,7 +473,71 @@ function changeQuantity($idProduct, $type){
     }
     // save new data in cookie
     document.cookie = "listCart=" + JSON.stringify(listCart) + "; expires=Thu, 31 Dec 2025 23:59:59 UTC; path=/;";
-    // reload html view cart
     addCartToHTML();
-}				
+}	
+
+// script for search & filter options
+document.addEventListener('DOMContentLoaded', () => {
+    let searchInput = document.getElementById('search-input');
+    let searchButton = document.getElementById('search-button');
+    let filterButtons = document.querySelectorAll('.button-value');
+
+    // Add event listener for filter buttons
+    filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+
+            button.classList.add('active');
+
+            let category = button.textContent.toLowerCase();
+            filterProducts(category);
+        });
+    });
+
+    // Filter products based on the category
+    function filterProducts(category) {
+        let filteredProducts;
+        if (category === 'all') {
+            filteredProducts = products;
+        } else {
+            filteredProducts = products.filter(product => product.category.toLowerCase() === category);
+        }
+        updateProductDisplay(filteredProducts);
+    }
+
+    // Add event listener for search functionality
+    searchButton.addEventListener('click', () => {
+        let searchValue = searchInput.value.toLowerCase();
+        if (searchValue) {
+            let searchResults = products.filter(product =>
+                product.name.toLowerCase().startsWith(searchValue)
+            );
+            updateProductDisplay(searchResults);
+        } else {
+            updateProductDisplay(products); 
+        }
+    });
+
+    // Function to update the product display in HTML
+    function updateProductDisplay(productList) {
+        let listProductHTML = document.querySelector('.listProduct');
+        listProductHTML.innerHTML = ''; 
+
+        productList.forEach(product => {
+            let newProduct = document.createElement('div');
+            newProduct.classList.add('item');
+            newProduct.innerHTML = `
+                <img src="${product.image}" alt="">
+                <h2>${product.name}</h2>
+                <div class="price">Amount:- Rs.${product.price}</div>
+                <button onclick="addCart(${product.id})">Add To Cart</button>
+            `;
+            listProductHTML.appendChild(newProduct);
+        });
+    }
+
+    // Initialize with all products
+    updateProductDisplay(products);
+});
+
 </script>
