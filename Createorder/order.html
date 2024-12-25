@@ -6,6 +6,16 @@
     <title>Your Orders</title>
     <link rel="icon" href="/img/orders.png" type="image/x-icon">
     <style>
+:root {
+    --primary-color: #007bff;
+    --secondary-color: #6c757d;
+    --background-color: #f8f9fa;
+    --hover-color: #0056b3;
+    --border-color: #dee2e6;
+    --font-color: #343a40;
+    --highlight-color: #ffc107;
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -61,59 +71,63 @@ nav a:hover {
 .checkoutLayout {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 80px;
-    padding: 20px;
+    gap: 40px;
+    padding: 30px;
 }
 
 .checkoutLayout .form {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
-    padding: 20px;
-    background-color: #ffffff;
-    border-radius: 10px;
-    min-height: 450px;
+    padding: 25px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.checkoutLayout .form h1,
+.checkoutLayout .form h1 {
+    color: var(--primary-color);
+}
+
 .checkoutLayout .form .group:nth-child(-n+3) {
     grid-column-start: 1;
     grid-column-end: 3;
 }
 
-.checkoutLayout .form .group {
-    display: flex;
-    flex-direction: column;
-}
-
 .checkoutLayout .form label {
     font-size: 16px;
     font-weight: 600;
-    margin-bottom: 8px;
-    color: #333;
+    margin-bottom: 6px;
+    color: var(--font-color);
 }
 
 .checkoutLayout .form input,
 .checkoutLayout .form select {
     width: 100%;
-    padding: 10px 15px;
+    padding: 12px 15px;
     box-sizing: border-box;
-    border-radius: 6px;
-    border: 1px solid #ddd;
-    background-color: #fff;
-    color: #333;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background-color: white;
+    color: var(--font-color);
     font-size: 14px;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .checkoutLayout .form input:focus,
 .checkoutLayout .form select:focus {
-    box-shadow: 0 0 8px orange;
+    box-shadow: 0 0 8px var(--primary-color);
+    border-color: var(--primary-color);
     outline: none;
 }
 
+.checkoutLayout .form input:hover,
+.checkoutLayout .form select:hover {
+    border-color: var(--highlight-color);
+}
+
 .checkoutLayout .form input::placeholder {
-    color: #bbb;
+    color: var(--secondary-color);
     font-size: 14px;
 }
 
@@ -121,17 +135,19 @@ nav a:hover {
     appearance: none;
     cursor: pointer;
 }
+
 .right {
-    background-color: #ffff;
-    border-radius: 10px;
-    padding: 20px;
+    background-color: white;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .right h1 {
-    font-size: 1.5em;
+    font-size: 1.8em;
     font-weight: bold;
-    margin: 30px 20px 10px 10px;
-    color: #333;
+    color: var(--primary-color);
+    margin-bottom: 20px;
 }
 
 .summary {
@@ -139,16 +155,22 @@ nav a:hover {
 }
 
 .return {
-    background-color: #fff;
-    border-radius: 8px;
+    background-color: white;
+    border-radius: 10px;
     padding: 15px;
+    border: 1px solid var(--border-color);
+    transition: box-shadow 0.3s ease;
+}
+
+.return:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .row {
     display: flex;
     justify-content: space-between;
     padding: 10px 0;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .row:last-child {
@@ -157,7 +179,7 @@ nav a:hover {
 
 .totalQuantity, .totalPrice {
     font-weight: bold;
-    color: #2c3e50;
+    color: green;
 }
 
 .payment-container {
@@ -165,13 +187,20 @@ nav a:hover {
 }
 
 .payment-methods {
-    background-color: #fff;
-    border-radius: 8px;
+    background-color: white;
+    border-radius: 10px;
     padding: 15px;
+    border: 1px solid var(--border-color);
+    transition: box-shadow 0.3s ease;
 }
-.payment-methods h1{
+
+.payment-methods:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.payment-methods h1 {
     font-size: 1.5em;
-    margin-left: -4px;
+    color: var(--primary-color);
 }
 
 .payment-methods label {
@@ -179,39 +208,48 @@ nav a:hover {
 }
 
 .payment-methods input[type="radio"] {
-    margin-right: 5px;
+    margin-right: 8px;
 }
-.payment-methods .COD {
-    background-color: #fff;
-    padding: 15px;
-    border: 1px solid #333;
-    margin: 20px 0;
-}
+
+.payment-methods .COD,
 .payment-methods .razorpay-payment {
-    background-color: #fff;
+    background-color: white;
     padding: 15px;
-    border: 1px solid #333;
-}
-
-.order-button-container {
-    margin-top: 15px;
-}
-
-.order-button {
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
+    border: 1px solid var(--border-color);
+    margin: 5px 0;
+    border-radius: 8px;
     transition: background-color 0.3s ease;
 }
 
-.order-button:hover {
-    background-color: #218838;
+.payment-methods .COD:hover,
+.payment-methods .razorpay-payment:hover {
+    background-color: var(--background-color);
 }
 
+.order-button-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.order-button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.order-button:hover {
+    background-color: var(--hover-color);
+    transform: translateY(-3px);
+}
+
+.order-button:active {
+    transform: translateY(1px);
+}
 footer {
     background-color: #374151;
     color: white;
