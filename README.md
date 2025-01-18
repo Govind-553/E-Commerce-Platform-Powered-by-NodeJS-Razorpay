@@ -1,4 +1,4 @@
-# Razorpay Node.js Integration with Product Page 💻💳
+# Cartify - Shopping Website Powered by NodeJS 💻💳
 This project demonstrates the integration of Razorpay payment gateway in a Node.js<br>
 application. The application includes a responsive product page 🛍️ listing various<br>
 products. Users can select a product and proceed to make a payment 💰. The payment<br> 
