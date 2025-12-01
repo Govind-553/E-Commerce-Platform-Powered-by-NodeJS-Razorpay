@@ -22,30 +22,43 @@ body {
     font-family: 'Poppins', sans-serif;
     box-sizing: border-box;
     overflow-x: hidden;
+    padding-top: 80px;
 }
+
+/* HEADER / NAVBAR */
+
 .headerContainer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 20px;
+    padding: 10px 20px;
     border-bottom: 2px solid #ddd;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #f9f9f9;
+    z-index: 10;
+    box-sizing: border-box;
 }
 header h1 {
     display: flex;
     align-items: center;
-    font-size: 1.8em;
-	font-weight: bold;
+    font-size: 1.6em;
+    font-weight: bold;
     margin: 0;
+    gap: 8px;
+    line-height: 1;
 }
 
 header h1 img {
-    height: 75px;
+    height: 50px;
     width: auto;
-	margin-top: 12px;
+    margin-top: 0;
     transition: transform 0.3s ease;
 }
 header h1 img:hover {
-    transform: scale(1.1);
+    transform: scale(1.05);
 }
 nav {
     display: flex;
@@ -58,16 +71,19 @@ nav a {
     color: #333;
     padding: 6px 15px;
     border-radius: 20px;
-    margin: 0 15px;
+    margin: 0 5px;
     font-weight: 600;
     background: transparent;
     border: none;
-    font-size: 20px;
+    font-size: 18px;
 }
 nav a:hover {
     background: #333;
     color: #fff;
 }
+
+/* LAYOUT */
+
 .checkoutLayout {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -244,15 +260,152 @@ nav a:hover {
 .order-button:active {
     transform: translateY(1px);
 }
-footer {
-    background-color: #374151;
-    color: white;
-    text-align: center;
-    padding: 10px;
+
+/* SUCCESS MODAL */
+
+.modal-overlay {
     position: fixed;
-    bottom: 0;
-    left: 0;
+    inset: 0;
+    background: rgba(15,23,42,0.65);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+}
+.modal-overlay.show {
+    display: flex;
+}
+.modal-content {
+    background: #ffffff;
+    padding: 24px 18px;
+    border-radius: 14px;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.25);
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+}
+.modal-content h1 {
+    color: #16a34a;
+    margin: 0 0 8px;
+    font-size: 1.6rem;
+}
+.modal-content p {
+    color: #374151;
+    margin: 0 0 18px;
+    font-size: 0.95rem;
+}
+.modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.modal-buttons button {
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+#success-home {
+    background-color: #3b82f6;
+    color: #ffffff;
+}
+#success-close {
+    background-color: #e5e7eb;
+    color: #111827;
+}
+
+/* FOOTER (3-COLUMN) */
+
+footer {
+    background: linear-gradient(90deg, #111827, #1f2937, #111827);
+    color: #e5e7eb;
     width: 100%;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.25);
+    box-sizing: border-box;
+    padding: 20px 10px 10px;
+    margin-top: 20px;
+}
+.footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.footer-columns {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+.footer-col {
+    flex: 1 1 200px;
+}
+.footer-col h4 {
+    margin: 0 0 8px;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.footer-col p,
+.footer-col a,
+.footer-col li {
+    font-size: 0.85rem;
+    color: #d1d5db;
+    margin: 4px 0;
+}
+.footer-col a {
+    text-decoration: none;
+}
+.footer-col a:hover {
+    color: #ffffff;
+}
+.footer-col ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.footer-bottom {
+    text-align: center;
+    font-size: 0.8rem;
+    color: #9ca3af;
+    margin-top: 12px;
+    border-top: 1px solid rgba(55,65,81,0.7);
+    padding-top: 8px;
+}
+
+/* ========= RESPONSIVE ========= */
+
+@media (max-width: 992px) {
+    .checkoutLayout {
+        grid-template-columns: 1fr;
+        gap: 25px;
+        padding: 20px 10px;
+    }
+    .checkoutLayout .form {
+        grid-template-columns: 1fr;
+    }
+    .checkoutLayout .form .group:nth-child(-n+3) {
+        grid-column-start: 1;
+        grid-column-end: 2;
+    }
+}
+
+@media (max-width: 768px) {
+    .headerContainer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    nav {
+        flex-wrap: wrap;
+        gap: 8px;
+        font-size: 20px;
+    }
+    nav a {
+        margin: 2px 0;
+        font-size: 16px;
+    }
 }
     </style>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
@@ -315,11 +468,11 @@ footer {
                 <div class="return">
                     <div class="row">
                         <div>Total Quantity</div>
-                        <div class="totalQuantity">70</div>
+                        <div class="totalQuantity">0</div>
                     </div>
                     <div class="row">
                         <div>Total Price</div>
-                        <div class="totalPrice">Amount: Rs.900</div>
+                        <div class="totalPrice">Amount: Rs.0</div>
                     </div>
                 </div>
             </div>
@@ -343,8 +496,44 @@ footer {
         </div>
     </div>
 </div>
+
+<!-- SUCCESS POPUP MODAL -->
+<div id="successModal" class="modal-overlay">
+    <div class="modal-content">
+        <h1>Order Placed Successfully!</h1>
+        <p>Thank you for shopping with CARTIFY. Your order has been placed successfully.</p>
+        <div class="modal-buttons">
+            <button id="success-home">Back to Home</button>
+            <button id="success-close">Close</button>
+        </div>
+    </div>
+</div>
+
 <footer>
-    <p>&copy; 2024 CARTIFY. All rights reserved.</p>
+    <div class="footer-inner">
+        <div class="footer-columns">
+            <div class="footer-col">
+                <h4>About Cartify</h4>
+                <p>Simplifying your online shopping with secure payments and quick delivery.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/checkout.html">Checkout</a></li>
+                    <li><a href="/order.html">Orders</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Help</h4>
+                <p>Email: care@cartify.com</p>
+                <p>FAQs · Returns · Support</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2025 CARTIFY. All rights reserved.
+        </div>
+    </div>
 </footer>
 
 <script>
@@ -384,12 +573,14 @@ footer {
             }
         }
 
+        // Load cart summary from localStorage
         window.addEventListener("load", function() {
-            const cartSummary = JSON.parse(localStorage.getItem("cartSummary"));
-            if (cartSummary) {
-                document.querySelector('.totalQuantity').innerText = cartSummary.totalQuantity;
-                document.querySelector('.totalPrice').innerText = 'Amount: Rs.' + cartSummary.totalPrice;
-            }
+            const cartSummary = JSON.parse(localStorage.getItem("cartSummary")) || { totalQuantity: 0, totalPrice: 0 };
+            document.querySelector('.totalQuantity').innerText = cartSummary.totalQuantity;
+            document.querySelector('.totalPrice').innerText = 'Amount: Rs.' + cartSummary.totalPrice;
+
+            // extra safety: clear cart cookie if anything left
+            document.cookie = "listCart=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         });
 
         function initiateRazorpayPayment(amount) {
@@ -412,7 +603,10 @@ footer {
                                 "description": "Order Payment",
                                 "image": "/img/logo.png",
                                 "handler": function (response) {
-                                    alert("Payment Successful! Payment ID: " + response.razorpay_payment_id);
+                                    // Clear cart data after successful online payment
+                                    localStorage.removeItem("cartSummary");
+                                    document.cookie = "listCart=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                                    showSuccessModal();
                                 },
                                 "theme": {
                                     "color": "#2300a3"
@@ -427,20 +621,52 @@ footer {
         }
 
         document.getElementById("pay-now").addEventListener("click", function () {
-            const totalPrice = parseFloat(document.querySelector('.totalPrice').innerText.replace("Amount: Rs.", ""));
+            const totalPriceText = document.querySelector('.totalPrice').innerText.replace("Amount: Rs.", "").trim();
+            const totalPrice = parseFloat(totalPriceText) || 0;
             const name = document.getElementById("name").value;
             const email = document.getElementById("email").value;
             const phone = document.getElementById("phone").value;
 
             if (name && email && phone) {
-                initiateRazorpayPayment(totalPrice);
+                if (totalPrice > 0) {
+                    initiateRazorpayPayment(totalPrice);
+                } else {
+                    alert("Cart is empty or total price is invalid.");
+                }
             } else {
                 alert("Please fill in all the fields.");
             }
         });
 
         document.getElementById("place-order").addEventListener("click", function () {
-            alert("Your order has been placed successfully via Cash on Delivery!");
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email").value;
+            const phone = document.getElementById("phone").value;
+
+            if (name && email && phone) {
+                // Clear cart data after COD order is placed
+                localStorage.removeItem("cartSummary");
+                document.cookie = "listCart=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                showSuccessModal();
+            } else {
+                alert("Please fill in all the fields.");
+            }
+        });
+
+        // Success modal helpers
+        const successModal = document.getElementById("successModal");
+        const successHomeBtn = document.getElementById("success-home");
+        const successCloseBtn = document.getElementById("success-close");
+
+        function showSuccessModal() {
+            successModal.classList.add("show");
+        }
+
+        successHomeBtn.addEventListener("click", function () {
+            window.location.href = "/";
+        });
+        successCloseBtn.addEventListener("click", function () {
+            successModal.classList.remove("show");
         });
     </script>
 </body>
