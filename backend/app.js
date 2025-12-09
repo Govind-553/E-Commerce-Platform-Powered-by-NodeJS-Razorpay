@@ -21,10 +21,6 @@ app.get('/order.html', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'frontend', 'order.html'));
 });
 
-app.get('/success.html', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'frontend', 'success.html'));
-});
-
 // Import and use payment routes
 const paymentRoute = require('./routes/paymentRoute');
 app.use('/', paymentRoute);

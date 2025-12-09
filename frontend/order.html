@@ -4,114 +4,280 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Orders</title>
-    <link rel="icon" href="/img/orders.png" type="image/x-icon">
+    <link rel="icon" href="img/orders.png" type="image/x-icon">
     <style>
 :root {
-    --primary-color: #007bff;
-    --secondary-color: #6c757d;
-    --background-color: #f8f9fa;
-    --hover-color: #0056b3;
-    --border-color: #dee2e6;
-    --font-color: #343a40;
-    --highlight-color: #ffc107;
+    --primary-color: #2563eb;
+    --secondary-color: #6b7280;
+    --background-color: #f3f4f6;
+    --hover-color: #1d4ed8;
+    --border-color: #e5e7eb;
+    --font-color: #111827;
+    --highlight-color: #facc15;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
 }
 
 body {
     margin: 0;
     padding: 0;
     font-family: 'Poppins', sans-serif;
-    box-sizing: border-box;
     overflow-x: hidden;
-    padding-top: 80px;
+    background-color: var(--background-color);
+    padding-top: 88px;
 }
 
 /* HEADER / NAVBAR */
 
 .headerContainer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    border-bottom: 2px solid #ddd;
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    background-color: #f9f9f9;
-    z-index: 10;
-    box-sizing: border-box;
+    padding: 0px 32px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 88px;
+    z-index: 70;
 }
+
 header h1 {
     display: flex;
     align-items: center;
-    font-size: 1.6em;
-    font-weight: bold;
-    margin: 0;
-    gap: 8px;
-    line-height: 1;
+    font-size: 1.7rem;
+    font-weight: 800;
+    gap: -5px;
+    letter-spacing: 0.06em;
+    color: #111827;
 }
 
 header h1 img {
-    height: 50px;
-    width: auto;
-    margin-top: 0;
-    transition: transform 0.3s ease;
+    margin-top: 10px;
+    width: 75px;
+    height: 75px;
+    border-radius: 12px;
+    object-fit: cover;
 }
+
 header h1 img:hover {
-    transform: scale(1.05);
+    transform: scale(1.04);
 }
+
 nav {
     display: flex;
-    gap: 15px;
-    font-size: 35px;
+    gap: 12px;
 }
 
 nav a {
     text-decoration: none;
-    color: #333;
-    padding: 6px 15px;
-    border-radius: 20px;
-    margin: 0 5px;
+    color: #111827;
+    padding: 8px 18px;
+    border-radius: 999px;
     font-weight: 600;
-    background: transparent;
-    border: none;
-    font-size: 18px;
-}
-nav a:hover {
-    background: #333;
-    color: #fff;
+    font-size: 0.95rem;
+    background-color: #f3f4f6;
+    border: 1px solid transparent;
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-/* LAYOUT */
+nav a:hover {
+    background-color: #111827;
+    color: #ffffff;
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.25);
+    transform: translateY(-1px);
+}
+
+/* CART MODAL */
+
+.cart-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.65);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    z-index: 80;
+}
+
+.cart-modal-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.cart-modal {
+    background: #ffffff;
+    width: 95%;
+    max-width: 480px;
+    padding: 22px 22px 18px;
+    border-radius: 18px;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+    transform: translateY(24px);
+    transition: transform 0.2s ease;
+}
+
+.cart-modal-overlay.open .cart-modal {
+    transform: translateY(0);
+}
+
+.cart-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cart-modal-header h2 {
+    margin: 0;
+    font-size: 1.4rem;
+    color: #111827;
+}
+
+.cart-modal-close {
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: #6b7280;
+}
+
+.cart-modal-body {
+    margin-top: 14px;
+    max-height: 340px;
+    overflow-y: auto;
+}
+
+.cart-modal-empty {
+    text-align: center;
+    padding: 20px 8px;
+    font-size: 0.95rem;
+    color: #6b7280;
+}
+
+.cart-modal-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #f9fafb;
+    border-radius: 12px;
+    padding: 10px 12px;
+}
+
+.cart-item img {
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+    object-fit: contain;
+    background: #e5e7eb;
+}
+
+.cart-info {
+    flex: 1;
+}
+
+.cart-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #111827;
+}
+
+.cart-meta {
+    font-size: 0.85rem;
+    color: #6b7280;
+}
+
+.cart-remove {
+    font-size: 20px;
+    color: #ef4444;
+    cursor: pointer;
+    padding-left: 4px;
+}
+
+.cart-modal-footer {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.cart-modal-footer button {
+    border: none;
+    border-radius: 999px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+#cart-keep-shopping {
+    background-color: #2563eb;
+    color: #ffffff;
+}
+
+#cart-close-bottom {
+    background-color: #e5e7eb;
+    color: #111827;
+}
+
+/* MAIN CONTAINER & LAYOUT */
+
+.container {
+    max-width: 1200px;
+    margin: 24px auto 40px;
+    padding: 0 16px;
+}
 
 .checkoutLayout {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 40px;
-    padding: 30px;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    gap: 28px;
+    background-color: #f9fafb;
+    border-radius: 24px;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+    padding: 26px 26px 28px;
 }
+
+/* LEFT: DELIVERY FORM */
 
 .checkoutLayout .form {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-    padding: 25px;
-    background-color: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px 20px;
+    background-color: #ffffff;
+    border-radius: 18px;
+    padding: 22px 20px 20px;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
 }
 
 .checkoutLayout .form h1 {
+    grid-column: 1 / -1;
+    margin: 0 0 10px;
+    font-size: 1.8rem;
+    font-weight: 700;
     color: var(--primary-color);
 }
 
-.checkoutLayout .form .group:nth-child(-n+3) {
-    grid-column-start: 1;
-    grid-column-end: 3;
+.checkoutLayout .form .group:nth-child(-n+4) {
+    grid-column: 1 / -1;
 }
 
 .checkoutLayout .form label {
-    font-size: 16px;
+    display: block;
+    font-size: 0.9rem;
     font-weight: 600;
     margin-bottom: 6px;
     color: var(--font-color);
@@ -120,101 +286,112 @@ nav a:hover {
 .checkoutLayout .form input,
 .checkoutLayout .form select {
     width: 100%;
-    padding: 12px 15px;
-    box-sizing: border-box;
-    border-radius: 8px;
+    padding: 11px 12px;
+    border-radius: 10px;
     border: 1px solid var(--border-color);
-    background-color: white;
+    background-color: #f9fafb;
+    font-size: 0.9rem;
     color: var(--font-color);
-    font-size: 14px;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
 .checkoutLayout .form input:focus,
 .checkoutLayout .form select:focus {
-    box-shadow: 0 0 8px var(--highlight-color);
     outline: none;
+    border-color: var(--primary-color);
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
 }
 
 .checkoutLayout .form input::placeholder {
     color: var(--secondary-color);
-    font-size: 14px;
 }
 
-.checkoutLayout .form select {
-    appearance: none;
-    cursor: pointer;
-}
+/* RIGHT: SUMMARY + PAYMENT */
 
 .right {
-    background-color: white;
-    border-radius: 12px;
-    padding: 25px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    border-radius: 18px;
+    padding: 22px 20px;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
 }
 
 .right h1 {
-    font-size: 1.8em;
-    font-weight: bold;
+    font-size: 1.7rem;
+    font-weight: 700;
     color: var(--primary-color);
-    margin-bottom: 20px;
+    margin: 0 0 10px;
 }
 
 .summary {
-    margin-bottom: 20px;
+    margin-bottom: 4px;
 }
 
 .return {
-    background-color: white;
-    border-radius: 10px;
-    padding: 15px;
+    background-color: #f9fafb;
+    border-radius: 14px;
+    padding: 14px 14px 10px;
     border: 1px solid var(--border-color);
-    transition: box-shadow 0.3s ease;
+    transition: box-shadow 0.2s ease;
 }
 
 .return:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.12);
 }
 
 .row {
     display: flex;
     justify-content: space-between;
-    padding: 10px 0;
+    align-items: center;
+    padding: 8px 0;
     border-bottom: 1px solid var(--border-color);
+    font-size: 0.93rem;
 }
 
 .row:last-child {
     border-bottom: none;
 }
 
-.totalQuantity, .totalPrice {
-    font-weight: bold;
-    color: green;
+.row div:first-child {
+    color: var(--secondary-color);
 }
 
+.totalQuantity,
+.totalPrice {
+    font-weight: 700;
+    color: #16a34a;
+}
+
+/* Payment section */
+
 .payment-container {
-    margin-top: 15px;
+    margin-top: 4px;
 }
 
 .payment-methods {
-    background-color: white;
-    border-radius: 10px;
-    padding: 15px;
+    background-color: #f9fafb;
+    border-radius: 14px;
+    padding: 14px 14px 10px;
     border: 1px solid var(--border-color);
-    transition: box-shadow 0.3s ease;
+    transition: box-shadow 0.2s ease;
 }
 
 .payment-methods:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.12);
 }
 
 .payment-methods h1 {
-    font-size: 1.5em;
+    font-size: 1.4rem;
+    margin: 0 0 10px;
     color: var(--primary-color);
 }
 
 .payment-methods label {
-    font-size: 16px;
+    font-size: 0.95rem;
+    color: var(--font-color);
 }
 
 .payment-methods input[type="radio"] {
@@ -223,42 +400,53 @@ nav a:hover {
 
 .payment-methods .COD,
 .payment-methods .razorpay-payment {
-    background-color: white;
-    padding: 15px;
+    background-color: #ffffff;
+    padding: 10px 10px;
     border: 1px solid var(--border-color);
-    margin: 5px 0;
-    border-radius: 8px;
-    transition: background-color 0.3s ease;
+    margin: 6px 0;
+    border-radius: 10px;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+    display: flex;
+    align-items: center;
 }
 
 .payment-methods .COD:hover,
 .payment-methods .razorpay-payment:hover {
-    background-color: var(--background-color);
+    background-color: #eff6ff;
+    border-color: var(--primary-color);
 }
 
+/* Buttons */
+
 .order-button-container {
-    margin-top: 20px;
+    margin-top: 16px;
     text-align: center;
 }
 
 .order-button {
-    background-color: var(--primary-color);
-    color: white;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: #ffffff;
     border: none;
-    border-radius: 8px;
-    padding: 12px 24px;
-    font-size: 16px;
+    border-radius: 999px;
+    padding: 11px 34px;
+    font-size: 0.95rem;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    display: inline-block;
+    box-shadow: 0 10px 22px rgba(37, 99, 235, 0.45);
+    transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .order-button:hover {
-    background-color: var(--hover-color);
-    transform: translateY(-3px);
+    background: linear-gradient(135deg, #1d4ed8, #1e40af);
+    transform: translateY(-1px);
+    box-shadow: 0 14px 28px rgba(30, 64, 175, 0.6);
 }
 
 .order-button:active {
-    transform: translateY(1px);
+    transform: translateY(0);
+    box-shadow: 0 8px 18px rgba(30, 64, 175, 0.5);
 }
 
 /* SUCCESS MODAL */
@@ -266,87 +454,101 @@ nav a:hover {
 .modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(15,23,42,0.65);
+    background: rgba(15, 23, 42, 0.7);
     display: none;
     align-items: center;
     justify-content: center;
-    z-index: 50;
+    z-index: 90;
 }
+
 .modal-overlay.show {
     display: flex;
 }
+
 .modal-content {
     background: #ffffff;
-    padding: 24px 18px;
-    border-radius: 14px;
-    box-shadow: 0 12px 35px rgba(0,0,0,0.25);
-    max-width: 500px;
-    width: 90%;
+    padding: 24px 22px;
+    border-radius: 18px;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+    max-width: 440px;
+    width: 92%;
     text-align: center;
 }
+
 .modal-content h1 {
     color: #16a34a;
     margin: 0 0 8px;
     font-size: 1.6rem;
+    font-weight: 700;
 }
+
 .modal-content p {
     color: #374151;
     margin: 0 0 18px;
     font-size: 0.95rem;
 }
+
 .modal-buttons {
     display: flex;
     justify-content: center;
     gap: 12px;
     flex-wrap: wrap;
 }
+
 .modal-buttons button {
     border: none;
-    border-radius: 6px;
+    border-radius: 999px;
     padding: 8px 16px;
     cursor: pointer;
     font-size: 0.9rem;
     font-weight: 600;
 }
+
 #success-home {
-    background-color: #3b82f6;
+    background-color: #2563eb;
     color: #ffffff;
 }
+
 #success-close {
     background-color: #e5e7eb;
     color: #111827;
 }
 
-/* FOOTER (3-COLUMN) */
+/* FOOTER */
 
 footer {
     background: linear-gradient(90deg, #111827, #1f2937, #111827);
     color: #e5e7eb;
     width: 100%;
-    box-shadow: 0 -2px 8px rgba(0,0,0,0.25);
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.25);
     box-sizing: border-box;
     padding: 20px 10px 10px;
-    margin-top: 20px;
+    margin-top: 26px;
 }
+
 .footer-inner {
     max-width: 1200px;
     margin: 0 auto;
 }
+
 .footer-columns {
     display: flex;
     justify-content: space-between;
     gap: 20px;
     flex-wrap: wrap;
 }
+
 .footer-col {
     flex: 1 1 200px;
 }
+
 .footer-col h4 {
     margin: 0 0 8px;
     font-size: 0.95rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
+
 .footer-col p,
 .footer-col a,
 .footer-col li {
@@ -354,57 +556,73 @@ footer {
     color: #d1d5db;
     margin: 4px 0;
 }
+
 .footer-col a {
     text-decoration: none;
 }
+
 .footer-col a:hover {
     color: #ffffff;
 }
+
 .footer-col ul {
     list-style: none;
     padding: 0;
     margin: 0;
 }
+
 .footer-bottom {
     text-align: center;
     font-size: 0.8rem;
     color: #9ca3af;
     margin-top: 12px;
-    border-top: 1px solid rgba(55,65,81,0.7);
+    border-top: 1px solid rgba(55, 65, 81, 0.7);
     padding-top: 8px;
 }
 
-/* ========= RESPONSIVE ========= */
+/* RESPONSIVE */
 
 @media (max-width: 992px) {
     .checkoutLayout {
         grid-template-columns: 1fr;
-        gap: 25px;
-        padding: 20px 10px;
+        gap: 22px;
+        padding: 20px 18px 22px;
     }
-    .checkoutLayout .form {
-        grid-template-columns: 1fr;
+
+    .right {
+        order: 2;
     }
-    .checkoutLayout .form .group:nth-child(-n+3) {
-        grid-column-start: 1;
-        grid-column-end: 2;
+
+    .form {
+        order: 1;
     }
 }
 
 @media (max-width: 768px) {
+    body {
+        padding-top: 130px;
+    }
+
     .headerContainer {
+        padding: 10px 16px;
         flex-direction: column;
         align-items: flex-start;
-        gap: 8px;
+        gap: 6px;
+        height: auto;
     }
+
     nav {
         flex-wrap: wrap;
         gap: 8px;
-        font-size: 20px;
+        margin-top: 4px;
     }
-    nav a {
-        margin: 2px 0;
-        font-size: 16px;
+
+    .checkoutLayout .form {
+        grid-template-columns: 1fr;
+    }
+
+    .checkoutLayout .form .group:nth-child(-n+4) {
+        grid-column: 1 / 2;
     }
 }
     </style>
@@ -413,14 +631,31 @@ footer {
 <body>
 <header>
     <div class="headerContainer">
-        <h1><img src="/img/logo.png" alt="">CARTIFY</h1>
+        <h1><img src="img/logo.png" alt="">CARTIFY</h1>
         <nav>
-            <a href="/">Home</a>
             <a href="/">Keep Shopping</a>
-            <a href="/cart">Cart</a>
+            <a href="" id="nav-cart">Cart</a>
         </nav>
     </div>
 </header>
+
+<!-- CART MODAL -->
+<div class="cart-modal-overlay" id="cartModal">
+    <div class="cart-modal">
+        <div class="cart-modal-header">
+            <h2>Your Cart</h2>
+            <button class="cart-modal-close" aria-label="Close cart">&times;</button>
+        </div>
+        <div class="cart-modal-body">
+            <div class="cart-modal-empty">Your cart is empty.</div>
+            <div class="cart-modal-list"></div>
+        </div>
+        <div class="cart-modal-footer">
+            <button id="cart-keep-shopping">Keep Shopping</button>
+            <button id="cart-close-bottom">Close</button>
+        </div>
+    </div>
+</div>
 
 <div class="container">
     <div class="checkoutLayout">    
@@ -573,14 +808,10 @@ footer {
             }
         }
 
-        // Load cart summary from localStorage
         window.addEventListener("load", function() {
             const cartSummary = JSON.parse(localStorage.getItem("cartSummary")) || { totalQuantity: 0, totalPrice: 0 };
             document.querySelector('.totalQuantity').innerText = cartSummary.totalQuantity;
             document.querySelector('.totalPrice').innerText = 'Amount: Rs.' + cartSummary.totalPrice;
-
-            // extra safety: clear cart cookie if anything left
-            document.cookie = "listCart=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         });
 
         function initiateRazorpayPayment(amount) {
@@ -603,7 +834,6 @@ footer {
                                 "description": "Order Payment",
                                 "image": "/img/logo.png",
                                 "handler": function (response) {
-                                    // Clear cart data after successful online payment
                                     localStorage.removeItem("cartSummary");
                                     document.cookie = "listCart=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
                                     showSuccessModal();
@@ -644,7 +874,6 @@ footer {
             const phone = document.getElementById("phone").value;
 
             if (name && email && phone) {
-                // Clear cart data after COD order is placed
                 localStorage.removeItem("cartSummary");
                 document.cookie = "listCart=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
                 showSuccessModal();
@@ -653,7 +882,6 @@ footer {
             }
         });
 
-        // Success modal helpers
         const successModal = document.getElementById("successModal");
         const successHomeBtn = document.getElementById("success-home");
         const successCloseBtn = document.getElementById("success-close");
@@ -668,6 +896,125 @@ footer {
         successCloseBtn.addEventListener("click", function () {
             successModal.classList.remove("show");
         });
+
+        // CART MODAL JS
+
+        let listCart = {};
+
+        function loadCartFromCookie() {
+            const cookieValue = document.cookie
+                .split('; ')
+                .find(row => row.startsWith('listCart='));
+            if (cookieValue) {
+                try {
+                    listCart = JSON.parse(cookieValue.split('=')[1]);
+                    if (typeof listCart !== 'object' || listCart === null) {
+                        listCart = {};
+                    }
+                } catch (e) {
+                    console.error('Error parsing listCart cookie', e);
+                    listCart = {};
+                }
+            } else {
+                listCart = {};
+            }
+        }
+
+        function updateSummaryFromCart() {
+            let totalQuantity = 0;
+            let totalPrice = 0;
+            for (const id in listCart) {
+                const p = listCart[id];
+                if (!p) continue;
+                totalQuantity += p.quantity;
+                totalPrice += p.price * p.quantity;
+            }
+            const totalQuantityEl = document.querySelector('.totalQuantity');
+            const totalPriceEl = document.querySelector('.totalPrice');
+            if (totalQuantityEl) totalQuantityEl.innerText = totalQuantity;
+            if (totalPriceEl) totalPriceEl.innerText = 'Amount: Rs.' + totalPrice;
+            localStorage.setItem("cartSummary", JSON.stringify({ totalQuantity, totalPrice }));
+        }
+
+        const cartModal = document.getElementById('cartModal');
+        const cartModalList = document.querySelector('.cart-modal-list');
+        const cartModalEmpty = document.querySelector('.cart-modal-empty');
+        const cartModalClose = document.querySelector('.cart-modal-close');
+        const navCartLink = document.getElementById('nav-cart');
+        const cartKeepShoppingBtn = document.getElementById('cart-keep-shopping');
+        const cartCloseBottomBtn = document.getElementById('cart-close-bottom');
+
+        function renderCartModal() {
+            loadCartFromCookie();
+            cartModalList.innerHTML = '';
+            let hasItems = false;
+
+            for (const id in listCart) {
+                const product = listCart[id];
+                if (!product) continue;
+                hasItems = true;
+
+                const item = document.createElement('div');
+                item.className = 'cart-item';
+                item.innerHTML = `
+                    <img src="${product.image}">
+                    <div class="cart-info">
+                        <div class="cart-name">${product.name}</div>
+                        <div class="cart-meta">Rs.${product.price} × ${product.quantity} = Rs.${product.price * product.quantity}</div>
+                    </div>
+                    <div class="cart-remove" data-id="${id}">&times;</div>
+                `;
+                cartModalList.appendChild(item);
+            }
+
+            cartModalEmpty.style.display = hasItems ? 'none' : 'block';
+        }
+
+        function openCartModal(e) {
+            if (e) e.preventDefault();
+            renderCartModal();
+            cartModal.classList.add('open');
+        }
+
+        function closeCartModal() {
+            cartModal.classList.remove('open');
+        }
+
+        if (navCartLink) {
+            navCartLink.addEventListener('click', openCartModal);
+        }
+
+        if (cartModalClose) {
+            cartModalClose.addEventListener('click', closeCartModal);
+        }
+
+        cartModal.addEventListener('click', (e) => {
+            if (e.target === cartModal) {
+                closeCartModal();
+            }
+        });
+
+        cartModalList.addEventListener('click', (e) => {
+            if (e.target.classList.contains('cart-remove')) {
+                const id = e.target.getAttribute('data-id');
+                if (id && listCart[id]) {
+                    delete listCart[id];
+                    document.cookie = "listCart=" + JSON.stringify(listCart) + "; path=/;";
+                    renderCartModal();
+                    updateSummaryFromCart();
+                }
+            }
+        });
+
+        if (cartKeepShoppingBtn) {
+            cartKeepShoppingBtn.addEventListener('click', function () {
+                window.location.href = "/";
+            });
+        }
+
+        if (cartCloseBottomBtn) {
+            cartCloseBottomBtn.addEventListener('click', closeCartModal);
+        }
     </script>
 </body>
 </html>
