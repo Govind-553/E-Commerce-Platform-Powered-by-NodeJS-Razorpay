@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Cartify</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f4f9; display: flex; }
+        .sidebar { width: 250px; background: #2c3e50; color: white; min-height: 100vh; padding: 20px; }
+        .content { flex: 1; padding: 40px; }
+        h1 { color: #2c3e50; }
+        form { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 500px; margin-bottom: 40px; }
+        input, textarea, select { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        button { background: #27ae60; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 4px; }
+        button:hover { background: #219150; }
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #2980b9; color: white; }
+        .action-btn { padding: 5px 10px; margin: 0 5px; cursor: pointer; border-radius: 3px; border: none; }
+        .edit-btn { background: #f39c12; color: white; }
+        .delete-btn { background: #c0392b; color: white; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Cartify Admin</h2>
+        <ul>
+            <li><a href="#" style="color: white; text-decoration: none;">Products</a></li>
+            <li><a href="/" style="color: #bdc3c7; text-decoration: none;">Back to Site</a></li>
+            <li><button id="logoutBtn" style="background:none; border:none; color:#bdc3c7; cursor:pointer; text-align:left; padding:0;">Logout</button></li>
+        </ul>
+    </div>
+    <div class="content">
+        <h1>Product Management</h1>
+        
+        <form id="productForm">
+            <h3 id="formTitle">Add New Product</h3>
+            <input type="hidden" id="productId">
+            <input type="text" id="name" placeholder="Product Name" required>
+            <input type="number" id="price" placeholder="Price" required>
+            <textarea id="description" placeholder="Description" required></textarea>
+            <input type="text" id="image" placeholder="Image URL" required>
+            <select id="category" required>
+                <option value="">Select Category</option>
+                <option value="Topwear">Topwear</option>
+                <option value="Bottomwear">Bottomwear</option>
+                <option value="Jacket">Jacket</option>
+                <option value="Wedding-Wear">Wedding-Wear</option>
+                <option value="Accessories">Accessories</option>
+            </select>
+            <input type="number" id="stock" placeholder="Stock Quantity" required>
+            <button type="submit">Save Product</button>
+            <button type="button" id="cancelBtn" style="background: #95a5a6; display: none;">Cancel</button>
+        </form>
+
+        <h2>All Products</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Category</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="productTableBody">
+                <!-- Products will be loaded here -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script>
+        // Firebase Config (Placeholder - User needs to fill this or we can fetch from an endpoint)
+        // ideally we should not hardcode config. For now, assuming user will fill/we use a placeholder.
+        const firebaseConfig = {
+          apiKey: "AIzaSyAj0htDaIfFhHukdP0cBT-dRUtPI8tu_fM",
+          authDomain: "cartify-ecommerce-platform.firebaseapp.com",
+          projectId: "cartify-ecommerce-platform",
+          storageBucket: "cartify-ecommerce-platform.firebasestorage.app",
+          messagingSenderId: "431820945362",
+          appId: "1:431820945362:web:de5ec2eccedf28d9f0ba0b"
+        };
+        firebase.initializeApp(firebaseConfig);
+        
+        const token = localStorage.getItem('authToken'); // Simplified auth for now
+        
+        // Fetch Products
+        async function fetchProducts() {
+            try {
+                const res = await fetch('/api/products');
+                const products = await res.json();
+                renderProducts(products);
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function renderProducts(products) {
+            const tbody = document.getElementById('productTableBody');
+            tbody.innerHTML = '';
+            products.forEach(p => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><img src="${p.image}" width="50"></td>
+                    <td>${p.name}</td>
+                    <td>Rs.${p.price}</td>
+                    <td>${p.category}</td>
+                    <td>
+                        <button class="action-btn edit-btn" onclick="editProduct('${p._id}')"><i class="fas fa-edit"></i></button>
+                        <button class="action-btn delete-btn" onclick="deleteProduct('${p._id}')"><i class="fas fa-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Add/Update Product
+        document.getElementById('productForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('productId').value;
+            const product = {
+                name: document.getElementById('name').value,
+                price: document.getElementById('price').value,
+                description: document.getElementById('description').value,
+                image: document.getElementById('image').value,
+                category: document.getElementById('category').value,
+                stock: document.getElementById('stock').value,
+            };
+
+            const method = id ? 'PUT' : 'POST';
+            const url = id ? `/api/products/${id}` : '/api/products';
+
+            const res = await fetch(url, {
+                method,
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}` // Send token
+                },
+                body: JSON.stringify(product)
+            });
+
+            if (res.ok) {
+                alert('Success');
+                resetForm();
+                fetchProducts();
+            } else {
+                const err = await res.json();
+                alert('Error: ' + err.message);
+            }
+        });
+
+        window.editProduct = async (id) => {
+             // In a real app, fetch single product or find from list
+             // For simplicity, finding from DOM or refetching
+             const res = await fetch('/api/products'); // inefficient but simple
+             const products = await res.json();
+             const p = products.find(prod => prod._id === id);
+             
+             document.getElementById('productId').value = p._id;
+             document.getElementById('name').value = p.name;
+             document.getElementById('price').value = p.price;
+             document.getElementById('description').value = p.description;
+             document.getElementById('image').value = p.image;
+             document.getElementById('category').value = p.category;
+             document.getElementById('stock').value = p.stock;
+             
+             document.getElementById('formTitle').innerText = 'Edit Product';
+             document.getElementById('cancelBtn').style.display = 'inline-block';
+        };
+
+        window.deleteProduct = async (id) => {
+            if(!confirm('Are you sure?')) return;
+            const res = await fetch(`/api/products/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if(res.ok) fetchProducts();
+            else alert('Error deleting');
+        };
+        
+        function resetForm() {
+            document.getElementById('productForm').reset();
+            document.getElementById('productId').value = '';
+            document.getElementById('formTitle').innerText = 'Add New Product';
+            document.getElementById('cancelBtn').style.display = 'none';
+        }
+        
+        document.getElementById('cancelBtn').addEventListener('click', resetForm);
+
+        fetchProducts();
+    </script>
+</body>
+</html>

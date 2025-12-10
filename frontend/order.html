@@ -815,12 +815,18 @@ footer {
         });
 
         function initiateRazorpayPayment(amount) {
-            fetch('/get-razorpay-key')
+            fetch('/get-razorpay-key', {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+            })
                 .then(response => response.json())
                 .then(data => {
+                    const token = localStorage.getItem('authToken');
                     fetch('/create-order', {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
                         body: JSON.stringify({ amount, currency: 'INR' })
                     })
                         .then(response => response.json())

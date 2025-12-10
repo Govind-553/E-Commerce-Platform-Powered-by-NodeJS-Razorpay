@@ -639,7 +639,7 @@ close.addEventListener('click', () => {
 
 let products = null;
 
-fetch('/product.json')
+fetch('/api/products')
     .then(response => response.json())
     .then(data => {
         products = data;
@@ -658,7 +658,7 @@ function addDataToHTML() {
             `<img src="${product.image}" alt="">
             <h2>${product.name}</h2>
             <div class="price">Amount:- Rs.${product.price}</div>
-            <button onclick="addCart(${product.id})">Add To Cart</button>`;
+            <button onclick="addCart('${product._id}')">Add To Cart</button>`;
 
             listProductHTML.appendChild(newProduct);
         });
@@ -689,7 +689,7 @@ checkCart();
 function addCart(idProduct) {
     let productsCopy = JSON.parse(JSON.stringify(products));
     if (!listCart[idProduct]) {
-        listCart[idProduct] = productsCopy.find(product => product.id == idProduct);
+        listCart[idProduct] = productsCopy.find(product => product._id == idProduct);
         listCart[idProduct].quantity = 1;
     } else {
         listCart[idProduct].quantity++;

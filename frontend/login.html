@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Cartify</title>
+    <style>
+        body { display: flex; justify-content: center; align-items: center; height: 100vh; background: #f0f2f5; font-family: sans-serif; }
+        .card { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center; }
+        h1 { margin-bottom: 20px; }
+        .google-btn { background: #4285F4; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-size: 16px; display: flex; align-items: center; gap: 10px; margin: 0 auto; }
+        .google-btn:hover { background: #357ae8; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Login to Cartify</h1>
+        <button class="google-btn" onclick="signInWithGoogle()">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20">
+            Sign in with Google
+        </button>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+          apiKey: "AIzaSyAj0htDaIfFhHukdP0cBT-dRUtPI8tu_fM",
+          authDomain: "cartify-ecommerce-platform.firebaseapp.com",
+          projectId: "cartify-ecommerce-platform",
+          storageBucket: "cartify-ecommerce-platform.firebasestorage.app",
+          messagingSenderId: "431820945362",
+          appId: "1:431820945362:web:de5ec2eccedf28d9f0ba0b"
+        };
+        
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+
+        async function signInWithGoogle() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            try {
+                const result = await firebase.auth().signInWithPopup(provider);
+                const user = result.user;
+                const token = await user.getIdToken();
+                
+                // Save token
+                localStorage.setItem('authToken', token);
+                
+                // Sync user with backend
+                const syncRes = await fetch('/api/auth/sync', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if(syncRes.ok) {
+                    window.location.href = '/';
+                } else {
+                    alert('Sync failed check console');
+                }
+            } catch (error) {
+                console.error(error);
+                alert('Login Failed: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>
