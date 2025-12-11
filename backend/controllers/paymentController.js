@@ -11,7 +11,7 @@ exports.getRazorpayKey = (req, res) => {
 };
 
 exports.initiatePayment = async (req, res) => {
-    const { amount, currency } = req.body;
+    const { amount, currency, products } = req.body;
     
     // Check if user is authenticated (populated by middleware)
     if (!req.dbUser) {
@@ -29,7 +29,8 @@ exports.initiatePayment = async (req, res) => {
         
         const newOrder = new Order({
             userId: req.dbUser._id,
-            products: [],
+            products: products || [],
+            totalAmount: amount,
             totalAmount: amount, 
             paymentId: razorpayOrder.id,
             status: 'pending'

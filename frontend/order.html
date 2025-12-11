@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Orders</title>
     <link rel="icon" href="img/orders.png" type="image/x-icon">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
 :root {
     --primary-color: #2563eb;
@@ -25,7 +27,7 @@
 body {
     margin: 0;
     padding: 0;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Inter', sans-serif;
     overflow-x: hidden;
     background-color: var(--background-color);
     padding-top: 88px;
@@ -631,7 +633,7 @@ footer {
 <body>
 <header>
     <div class="headerContainer">
-        <h1><img src="img/logo.png" alt="">CARTIFY</h1>
+        <h1><img src="/img/logo.png" alt="">CARTIFY</h1>
         <nav>
             <a href="/">Keep Shopping</a>
             <a href="" id="nav-cart">Cart</a>
@@ -771,6 +773,7 @@ footer {
     </div>
 </footer>
 
+<script src="js/toast.js"></script>
 <script>
         const statesInIndia = [
             "Mumbai", "Amritsar", "Chandigarh", "Patna", "Dehradun", "Delhi", "Goa",
@@ -815,6 +818,20 @@ footer {
         });
 
         function initiateRazorpayPayment(amount) {
+            // Prepare products from listCart
+            const products = [];
+            for (const id in listCart) {
+                if (listCart[id]) {
+                    products.push({
+                        productId: id,
+                        name: listCart[id].name, // Optional: save snapshot of name/price if needed by backend or just ID
+                        quantity: listCart[id].quantity,
+                        price: listCart[id].price,
+                        image: listCart[id].image
+                    });
+                }
+            }
+
             fetch('/get-razorpay-key', {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
             })
@@ -827,7 +844,7 @@ footer {
                             'Content-Type': 'application/json',
                             'Authorization': `Bearer ${token}`
                         },
-                        body: JSON.stringify({ amount, currency: 'INR' })
+                        body: JSON.stringify({ amount, currency: 'INR', products })
                     })
                         .then(response => response.json())
                         .then(order => {
@@ -851,9 +868,15 @@ footer {
                             var rzp1 = new Razorpay(options);
                             rzp1.open();
                         })
-                        .catch(error => console.error('Error initiating payment:', error));
+                        .catch(error => {
+                            console.error('Error initiating payment:', error);
+                            Toast.show('Error initiating payment', 'error');
+                        });
                 })
-                .catch(error => console.error('Error fetching Razorpay key:', error));
+                .catch(error => {
+                    console.error('Error fetching Razorpay key:', error);
+                    Toast.show('Error fetching payment details', 'error');
+                });
         }
 
         document.getElementById("pay-now").addEventListener("click", function () {
@@ -867,10 +890,10 @@ footer {
                 if (totalPrice > 0) {
                     initiateRazorpayPayment(totalPrice);
                 } else {
-                    alert("Cart is empty or total price is invalid.");
+                    Toast.show("Cart is empty or total price is invalid.", 'warning');
                 }
             } else {
-                alert("Please fill in all the fields.");
+                Toast.show("Please fill in all the fields.", 'warning');
             }
         });
 
@@ -880,11 +903,62 @@ footer {
             const phone = document.getElementById("phone").value;
 
             if (name && email && phone) {
-                localStorage.removeItem("cartSummary");
-                document.cookie = "listCart=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-                showSuccessModal();
+                // Determine Amount
+                const totalPriceText = document.querySelector('.totalPrice').innerText.replace("Amount: Rs.", "").trim();
+                const amount = parseFloat(totalPriceText) || 0;
+
+                // Prepare Products
+                const products = [];
+                for (const id in listCart) {
+                    if (listCart[id]) {
+                        products.push({
+                            productId: id,
+                            name: listCart[id].name,
+                            quantity: listCart[id].quantity,
+                            price: listCart[id].price,
+                            image: listCart[id].image
+                        });
+                    }
+                }
+
+                // COD Logic - Try to create order in backend
+                const token = localStorage.getItem('authToken');
+                if (token && amount > 0) {
+                    fetch('/create-order', {
+                        method: 'POST',
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ 
+                            amount, 
+                            currency: 'INR', 
+                            products, 
+                            status: 'pending', // Default
+                            paymentMethod: 'COD' 
+                        })
+                    }).then(res => res.json())
+                      .then(data => {
+                          console.log("COD Order Created:", data);
+                          finalizeOrder();
+                      })
+                      .catch(err => {
+                          console.error("COD Order Error:", err);
+                          finalizeOrder(); // Proceed anyway for UI
+                      });
+                } else {
+                     finalizeOrder();
+                }
+
+                function finalizeOrder() {
+                    localStorage.removeItem("cartSummary");
+                    document.cookie = "listCart=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                    showSuccessModal();
+                    Toast.show('Order placed successfully!', 'success');
+                }
+
             } else {
-                alert("Please fill in all the fields.");
+                Toast.show("Please fill in all the fields.", 'warning');
             }
         });
 

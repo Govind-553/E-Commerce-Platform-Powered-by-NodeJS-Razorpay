@@ -14,6 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Static files
 app.use(express.static(path.join(__dirname, '..', 'frontend', 'public')));
+app.use('/js', express.static(path.join(__dirname, '..', 'frontend', 'js')));
 
 // API Routes
 app.use('/api/products', require('./routes/productRoutes'));
@@ -26,6 +27,10 @@ app.use('/', require('./routes/paymentRoute'));
 // Serve HTML files
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'frontend', 'index.html'));
+});
+
+app.get('/products', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'frontend', 'products.html'));
 });
 
 app.get('/checkout.html', (req, res) => {
@@ -42,6 +47,10 @@ app.get('/admin', (req, res) => {
 
 app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'frontend', 'login.html'));
+});
+
+app.get('/profile', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'frontend', 'profile.html'));
 });
 
 // Start the server

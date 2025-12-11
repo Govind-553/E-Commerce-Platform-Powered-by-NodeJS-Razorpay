@@ -5,7 +5,7 @@ const User = require('../models/User');
 // @access  Private
 const syncUser = async (req, res) => {
   try {
-    const { uid, email, name, picture } = req.user; // from verifyToken middleware
+    const { uid, email, name, picture } = req.user; 
 
     let user = await User.findOne({ firebaseUid: uid });
 
@@ -13,7 +13,7 @@ const syncUser = async (req, res) => {
       // Update existing user info if needed
       user.name = name || user.name;
       user.email = email || user.email;
-      // user.picture = picture; // If we add picture to model
+      if (user.email === 'admin@gmail.com') user.role = 'admin';
       await user.save();
       res.json(user);
     } else {
@@ -22,7 +22,7 @@ const syncUser = async (req, res) => {
         firebaseUid: uid,
         name: name || 'User',
         email: email,
-        role: 'user', // Default role
+        role: email === 'admin@gmail.com' ? 'admin' : 'user',
       });
       await user.save();
       res.status(201).json(user);

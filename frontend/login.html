@@ -5,47 +5,256 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Cartify</title>
     <style>
-        body { display: flex; justify-content: center; align-items: center; height: 100vh; background: #f0f2f5; font-family: sans-serif; }
-        .card { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center; }
-        h1 { margin-bottom: 20px; }
-        .google-btn { background: #4285F4; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-size: 16px; display: flex; align-items: center; gap: 10px; margin: 0 auto; }
-        .google-btn:hover { background: #357ae8; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+        
+        body { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            font-family: 'Inter', sans-serif; 
+            margin: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+            backdrop-filter: blur(10px);
+            animation: fadeInUp 0.6s ease-out;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        h2 { 
+            text-align: center; 
+            color: #111827; 
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 0.75rem;
+            cursor: pointer;
+            font-weight: 600;
+            color: #6b7280;
+            transition: all 0.3s;
+        }
+        .tab.active {
+            color: #4f46e5;
+            border-bottom: 2px solid #4f46e5;
+            margin-bottom: -2px;
+        }
+        
+        /* Forms */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #374151;
+            font-size: 0.9rem;
+        }
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+        input:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-primary {
+            background: #4f46e5;
+            color: white;
+            margin-bottom: 1rem;
+        }
+        .btn-primary:hover {
+            background: #4338ca;
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 1.5rem 0;
+            color: #9ca3af;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .divider span {
+            padding: 0 10px;
+            font-size: 0.85rem;
+        }
+        
+        .google-btn { 
+            background: #ffffff; 
+            color: #374151; 
+            border: 1px solid #d1d5db; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 10px; 
+        }
+        .google-btn:hover { 
+            background: #f9fafb; 
+        }
+
+        .hidden { display: none; }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h1>Login to Cartify</h1>
-        <button class="google-btn" onclick="signInWithGoogle()">
+    <div class="container">
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('login')">Login</div>
+            <div class="tab" onclick="switchTab('register')">Register</div>
+        </div>
+
+        <!-- Login Form -->
+        <div id="login-form">
+            <h2>Welcome Back</h2>
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+        </div>
+
+        <!-- Register Form -->
+        <div id="register-form" class="hidden">
+            <h2>Create Account</h2>
+            <form onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" id="reg-name" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="reg-email" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="reg-password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+        </div>
+
+        <div class="divider">
+            <span>OR CONTINUE WITH</span>
+        </div>
+
+        <button class="btn google-btn" onclick="signInWithGoogle()">
             <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20">
-            Sign in with Google
+            Google
         </button>
     </div>
 
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="js/firebaseConfig.js"></script>
+    <script src="js/toast.js"></script>
     <script>
-        const firebaseConfig = {
-          apiKey: "AIzaSyAj0htDaIfFhHukdP0cBT-dRUtPI8tu_fM",
-          authDomain: "cartify-ecommerce-platform.firebaseapp.com",
-          projectId: "cartify-ecommerce-platform",
-          storageBucket: "cartify-ecommerce-platform.firebasestorage.app",
-          messagingSenderId: "431820945362",
-          appId: "1:431820945362:web:de5ec2eccedf28d9f0ba0b"
-        };
-        
-        // Initialize Firebase
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
+        // Config initialized in firebaseConfig.js
+
+        const auth = firebase.auth();
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            if(tab === 'login') {
+                document.querySelector('.tab:nth-child(1)').classList.add('active');
+                document.getElementById('login-form').classList.remove('hidden');
+                document.getElementById('register-form').classList.add('hidden');
+            } else {
+                document.querySelector('.tab:nth-child(2)').classList.add('active');
+                document.getElementById('login-form').classList.add('hidden');
+                document.getElementById('register-form').classList.remove('hidden');
+            }
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            try {
+                const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                Toast.show('Login successful! Redirecting...', 'success');
+                await postAuth(userCredential.user);
+            } catch (error) {
+                Toast.show('Login failed: ' + error.message, 'error');
+            }
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('reg-name').value;
+            const email = document.getElementById('reg-email').value;
+            const password = document.getElementById('reg-password').value;
+
+            try {
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+                await user.updateProfile({ displayName: name });
+                Toast.show('Registration successful!', 'success');
+                await postAuth(user);
+            } catch (error) {
+                Toast.show('Registration failed: ' + error.message, 'error');
+            }
         }
 
         async function signInWithGoogle() {
             const provider = new firebase.auth.GoogleAuthProvider();
             try {
-                const result = await firebase.auth().signInWithPopup(provider);
-                const user = result.user;
+                const result = await auth.signInWithPopup(provider);
+                Toast.show('Google Sign-In successful!', 'success');
+                await postAuth(result.user);
+            } catch (error) {
+                console.error(error);
+                Toast.show('Google Sign-In Failed: ' + error.message, 'error');
+            }
+        }
+
+        async function postAuth(user) {
+            try {
                 const token = await user.getIdToken();
-                
-                // Save token
                 localStorage.setItem('authToken', token);
                 
                 // Sync user with backend
@@ -55,13 +264,25 @@
                 });
 
                 if(syncRes.ok) {
-                    window.location.href = '/';
+                    const data = await syncRes.json();
+                    
+                    // Store user role
+                    localStorage.setItem('userRole', data.role);
+                    
+                    setTimeout(() => {
+                        if (data.role === 'admin') {
+                             window.location.href = '/admin';
+                        } else {
+                             window.location.href = '/';
+                        }
+                    }, 1000); // Wait a sec for toast
                 } else {
-                    alert('Sync failed check console');
+                    console.error("Sync failed");
+                    window.location.href = '/';
                 }
-            } catch (error) {
-                console.error(error);
-                alert('Login Failed: ' + error.message);
+            } catch (err) {
+                console.error(err);
+                Toast.show("Authentication processing failed.", 'error');
             }
         }
     </script>

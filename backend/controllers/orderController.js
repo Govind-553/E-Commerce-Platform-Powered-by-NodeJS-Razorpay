@@ -24,13 +24,7 @@ const createOrder = async (req, res) => {
       status: 'pending' // Initial status
     });
 
-    // If we want to strictly link to a registered user, check req.dbUser.
-    // However, if we allow guest checkout (authenticated via firebase but not synced yet), we might leverage firebaseUid.
-    // For now assuming we require synced user or at least storing some user identifier.
-    // If req.dbUser is null, we might need to handle it. 
     if (!req.dbUser) {
-        // Fallback or error? User said "Users after authentication... allowed to perform buying".
-        // Use logic from authMiddleware where we check DB.
         return res.status(400).json({ message: 'User info not found in database. Please ensure account is synced.' });
     }
 
@@ -56,7 +50,41 @@ const getMyOrders = async (req, res) => {
   }
 };
 
+// @desc    Get all orders (Admin)
+// @route   GET /api/orders/all
+// @access  Private/Admin
+const getAllOrders = async (req, res) => {
+  try {
+    const orders = await Order.find({}).sort({ createdAt: -1 });
+    res.json(orders);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @desc    Update order status (Admin)
+// @route   PUT /api/orders/:id/status
+// @access  Private/Admin
+const updateOrderStatus = async (req, res) => {
+  try {
+    const { status } = req.body;
+    const order = await Order.findById(req.params.id);
+
+    if (order) {
+      order.status = status;
+      const updatedOrder = await order.save();
+      res.json(updatedOrder);
+    } else {
+      res.status(404).json({ message: 'Order not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   createOrder,
   getMyOrders,
+  getAllOrders,
+  updateOrderStatus,
 };
