@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cartify - Your One Stop Shop</title>
+    <link rel="icon" href="img/payment.png" type="image/x-icon">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
 
@@ -21,7 +22,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem 2rem;
+            padding: 0rem 1rem;
             max-width: 1200px;
             margin: 0 auto;
             position: sticky;
@@ -40,12 +41,15 @@
             text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: -5px;
         }
         
         .logo img {
-            height: 40px;
-            width: auto;
+            margin-top: 10px;
+    width: 75px;
+    height: 75px;
+    border-radius: 12px;
+    object-fit: cover;
         }
 
         .nav-links {
@@ -213,6 +217,51 @@
             }
         }
 
+
+        
+        /* New Sections */
+        .section-container { max-width: 1200px; margin: 4rem auto; padding: 0 2rem; }
+        .section-title { font-size: 2rem; margin-bottom: 2rem; text-align: center; color: #111827; }
+        .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; }
+        
+        .cat-card {
+            background: white; padding: 2rem; border-radius: 12px; text-align: center; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: transform 0.2s;
+        }
+        .cat-card:hover { transform: translateY(-5px); }
+        .cat-icon { font-size: 2rem; color: #4f46e5; margin-bottom: 1rem; }
+        .cat-title { margin: 0; color: #374151; }
+
+        .features-section { background: white; padding: 4rem 2rem; }
+        .features-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 3rem; }
+        .feature-item { flex: 1; min-width: 250px; text-align: center; }
+        .feature-icon-wrapper { 
+            width: 60px; height: 60px; background: #e0e7ff; 
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+            margin: 0 auto 1rem; 
+        }
+        .feature-icon { font-size: 1.5rem; }
+        .feature-title { margin-bottom: 0.5rem; color: #1f2937; }
+        .feature-desc { color: #6b7280; }
+
+        .newsletter-section { 
+            background: linear-gradient(135deg, #4f46e5, #6366f1); 
+            padding: 4rem 2rem; text-align: center; color: white; 
+        }
+        .newsletter-form { 
+            display: flex; justify-content: center; gap: 1rem; 
+            max-width: 500px; margin: 0 auto; flex-wrap: wrap; 
+        }
+        .newsletter-input { 
+            padding: 0.75rem 1.5rem; border-radius: 999px; border: none; 
+            flex: 1; font-size: 1rem; min-width: 200px; 
+        }
+        .newsletter-btn { 
+            background: #111827; color: white; border: none; 
+            padding: 0.75rem 2rem; border-radius: 999px; font-weight: 600; 
+            cursor: pointer; transition: background 0.2s; 
+        }
+
     </style>
 </head>
 <body>
@@ -241,6 +290,69 @@
             <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2070&auto=format&fit=crop" alt="Shopping Experience">
         </div>
     </main>
+
+    <!-- Featured Categories -->
+    <section class="section-container">
+        <h2 class="section-title">Shop by Category</h2>
+        <div class="grid-4">
+            <div class="cat-card">
+                <i class="fas fa-tshirt cat-icon"></i>
+                <h3 class="cat-title">Topwear</h3>
+            </div>
+            <div class="cat-card">
+                <i class="fas fa-layer-group cat-icon"></i>
+                <h3 class="cat-title">Bottomwear</h3>
+            </div>
+            <div class="cat-card">
+                <i class="fas fa-shoe-prints cat-icon"></i>
+                <h3 class="cat-title">Footwear</h3>
+            </div>
+            <div class="cat-card">
+                <i class="fas fa-glasses cat-icon"></i>
+                <h3 class="cat-title">Accessories</h3>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features-section">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <h2 class="section-title" style="margin-bottom: 3rem;">Why Choose Cartify?</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon-wrapper">
+                        <span class="feature-icon">🚀</span>
+                    </div>
+                    <h3 class="feature-title">Fast Delivery</h3>
+                    <p class="feature-desc">Get your orders delivered to your doorstep in record time.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon-wrapper">
+                        <span class="feature-icon">🛡️</span>
+                    </div>
+                    <h3 class="feature-title">Secure Payments</h3>
+                    <p class="feature-desc">Your transactions are safe with our industry-standard security.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon-wrapper">
+                        <span class="feature-icon">🎧</span>
+                    </div>
+                    <h3 class="feature-title">24/7 Support</h3>
+                    <p class="feature-desc">Our dedicated team is here to help you whenever you need it.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="newsletter-section">
+        <h2 style="font-size: 2rem; margin-bottom: 1rem;">Stay in the Loop</h2>
+        <p style="margin-bottom: 2rem; opacity: 0.9;">Subscribe to our newsletter for exclusive offers and updates.</p>
+        <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Subscribed!');">
+            <input type="email" placeholder="Enter your email" required class="newsletter-input">
+            <button type="submit" class="newsletter-btn">Subscribe</button>
+        </form>
+    </section>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {

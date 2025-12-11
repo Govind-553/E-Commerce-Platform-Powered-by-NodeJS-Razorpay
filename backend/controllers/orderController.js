@@ -55,7 +55,8 @@ const getMyOrders = async (req, res) => {
 // @access  Private/Admin
 const getAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find({}).sort({ createdAt: -1 });
+    // Populate user details (name, email) from User model
+    const orders = await Order.find({}).populate('userId', 'name email').sort({ createdAt: -1 });
     res.json(orders);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -81,10 +82,38 @@ const updateOrderStatus = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+// @desc    Cancel order (User)
+// @route   PUT /api/orders/:id/cancel
+// @access  Private
+const cancelOrder = async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id);
+
+    if (order) {
+        // Ensure user owns the order
+        if (order.userId.toString() !== req.dbUser._id.toString()) {
+            return res.status(401).json({ message: 'Not authorized to edit this order' });
+        }
+        
+        if (order.status !== 'pending') {
+            return res.status(400).json({ message: 'Cannot cancel order that is not pending' });
+        }
+
+        order.status = 'cancelled';
+        const updatedOrder = await order.save();
+        res.json(updatedOrder);
+    } else {
+      res.status(404).json({ message: 'Order not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 module.exports = {
   createOrder,
   getMyOrders,
   getAllOrders,
   updateOrderStatus,
+  cancelOrder
 };

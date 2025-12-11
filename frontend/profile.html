@@ -137,6 +137,7 @@
             background: #f9fafb;
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <nav class="navbar">
@@ -151,9 +152,37 @@
 
         <div class="card user-info">
             <div class="avatar" id="avatarDisplay">U</div>
-            <div class="info">
-                <h2 id="userName">Loading...</h2>
-                <p id="userEmail">...</p>
+            <div class="info" style="flex: 1;">
+                <div style="display: flex; justify-content: space-between; align-items: start;">
+                    <div>
+                        <h2 id="userName">Loading...</h2>
+                        <p id="userEmail">...</p>
+                        <p id="userPhone" style="font-size: 0.9rem; margin-top: 5px;">...</p>
+                        <p id="userAddress" style="font-size: 0.9rem;">...</p>
+                    </div>
+                    <button class="btn-outline" onclick="toggleEditProfile()">Edit Profile</button>
+                </div>
+                
+                <!-- Edit Profile Form -->
+                <div id="editProfileForm" style="display: none; margin-top: 1rem; border-top: 1px solid #e5e7eb; padding-top: 1rem;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                        <input type="text" id="editName" placeholder="Full Name" style="padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+                        <input type="text" id="editPhone" placeholder="Phone Number" style="padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+                        <input type="text" id="editAddress" placeholder="Address" style="grid-column: span 2; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button onclick="saveProfile()" style="background: #4f46e5; color: white; padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer;">Save Changes</button>
+                        <button onclick="toggleEditProfile()" style="background: #e5e7eb; color: #374151; padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer;">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity Chart -->
+        <div class="card">
+            <h3>My Activity</h3>
+            <div style="height: 250px;">
+                <canvas id="activityChart"></canvas>
             </div>
         </div>
 
@@ -172,6 +201,7 @@
     <script src="js/toast.js"></script>
     <script>
         // Config initialized in firebaseConfig.js
+        let authToken = null;
 
         // Check Auth
         firebase.auth().onAuthStateChanged(async (user) => {
@@ -182,6 +212,7 @@
                 
                 // Fetch orders
                 const token = await user.getIdToken();
+                authToken = token;
                 fetchOrders(token);
             } else {
                 window.location.href = '/login';
@@ -246,14 +277,99 @@
                                 <div style="color: #6b7280;">Placed on ${date}</div>
                                 <div>Total: <strong>Rs. ${totalAmount.toLocaleString()}</strong></div>
                             </div>
-                            <span class="order-status ${order.status === 'paid' ? 'status-paid' : 'status-pending'}">
+                            <span class="order-status status-${order.status || 'pending'}">
                                 ${order.status || 'Pending'}
                             </span>
                         </div>
                         ${productsHtml}
+                        ${order.status === 'pending' ? `<div style="text-align: right; margin-top: 1rem;">
+                            <button onclick="cancelOrder('${order._id}')" class="btn-outline" style="border-color: #fee2e2; background: #fff1f2; color: #991b1b; font-size: 0.85rem;">Cancel Order</button>
+                        </div>` : ''}
                     </div>
                 `;
                 list.appendChild(item);
+            });
+        }
+
+        async function cancelOrder(orderId) {
+            if(!confirm('Are you sure you want to cancel this order?')) return;
+            
+            try {
+                const res = await fetch(`/api/orders/${orderId}/cancel`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                if(res.ok) {
+                    Toast.show('Order cancelled successfully', 'success');
+                    fetchOrders(authToken); // Refresh
+                } else {
+                    const d = await res.json();
+                    Toast.show(d.message || 'Failed to cancel', 'error');
+                }
+            } catch(e) {
+                console.error(e);
+                Toast.show('Error cancelling order', 'error');
+            }
+        }
+
+        function toggleEditProfile() {
+            const form = document.getElementById('editProfileForm');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
+
+        async function saveProfile() {
+            const name = document.getElementById('editName').value;
+            const phone = document.getElementById('editPhone').value;
+            const address = document.getElementById('editAddress').value;
+
+            try {
+                const res = await fetch('/api/users/profile', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({ name, phone, address })
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    document.getElementById('userName').innerText = data.name;
+                    document.getElementById('userPhone').innerText = data.phone || '';
+                    document.getElementById('userAddress').innerText = data.address || '';
+                    document.getElementById('avatarDisplay').innerText = data.name.charAt(0).toUpperCase();
+                    Toast.show('Profile updated successfully', 'success');
+                    toggleEditProfile();
+                } else {
+                    Toast.show('Failed to update profile', 'error');
+                }
+            } catch (error) {
+                console.error(error);
+                Toast.show('Error updating profile', 'error');
+            }
+        }
+
+        function renderActivityChart(orders) {
+            const ctx = document.getElementById('activityChart').getContext('2d');
+            const statusCounts = orders.reduce((acc, order) => {
+                acc[order.status] = (acc[order.status] || 0) + 1;
+                return acc;
+            }, {});
+
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(statusCounts).map(s => s.toUpperCase()),
+                    datasets: [{
+                        data: Object.values(statusCounts),
+                        backgroundColor: ['#4f46e5', '#10b981', '#f59e0b', '#ef4444', '#6b7280']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'right' } }
+                }
             });
         }
 
