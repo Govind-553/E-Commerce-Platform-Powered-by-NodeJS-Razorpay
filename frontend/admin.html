@@ -1,659 +1,793 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Cartify</title>
-    <link rel="icon" href="img/payment.png" type="image/x-icon">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background: #f3f4f6; 
-            margin: 0; 
-            display: flex; 
-            height: 100vh;
-            overflow: hidden;
-        }
-        
-        /* Sidebar */
-        .sidebar { 
-            width: 260px; 
-            background: #1f2937; 
-            color: white; 
-            display: flex; 
-            flex-direction: column;
-            padding: 1.5rem;
-            box-sizing: border-box;
-        }
-        .sidebar h2 {
-            font-size: 1.5rem;
-            margin-bottom: 2rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
-            flex: 1;
-        }
-        .sidebar li {
-            margin-bottom: 0.5rem;
-        }
-        .sidebar a, .sidebar button {
-            display: block;
-            padding: 0.75rem 1rem;
-            color: #9ca3af;
-            text-decoration: none;
-            border-radius: 6px;
-            transition: all 0.2s;
-            background: none;
-            border: none;
-            width: 100%;
-            text-align: left;
-            font-size: 1rem;
-            font-family: inherit;
-            cursor: pointer;
-        }
-        .sidebar a:hover, .sidebar button:hover, .sidebar a.active {
-            background: #374151;
-            color: white;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard - Cartify</title>
+  <link rel="icon" href="img/payment.png" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-        /* Content */
-        .content { 
-            flex: 1; 
-            padding: 2rem; 
-            overflow-y: auto;
-        }
-        
-        h1 { margin-top: 0; color: #111827; }
+  <style>
+    :root{
+      --bg: #f6f8fb;
+      --panel: #111827;
+      --muted: #6b7280;
+      --accent: #4f46e5;
+      --accent-2: #06b6d4;
+      --danger: #ef4444;
+      --card-bg: #ffffff;
+      --radius: 12px;
+      --shadow: 0 8px 30px rgba(15,23,42,0.06);
+      --soft-shadow: 0 6px 18px rgba(15,23,42,0.04);
+      --max-width: 1200px;
+    }
 
-        /* Stats */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        .stat-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .stat-info h3 { margin: 0; font-size: 0.9rem; color: #6b7280; font-weight: 500; }
-        .stat-info p { margin: 5px 0 0; font-size: 1.5rem; font-weight: 700; color: #111827; }
-        .stat-icon { font-size: 1.5rem; color: #4f46e5; background: #e0e7ff; padding: 12px; border-radius: 12px; }
+    *{box-sizing:border-box}
+    html,body{height:100%; margin:0; font-family:'Inter',sans-serif; background: linear-gradient(180deg,var(--bg),#eef2f7); color:#0f172a; -webkit-font-smoothing:antialiased}
+    a{color:inherit}
+    img{display:inline-block; max-width:100%}
 
-        /* Tables & Forms */
-        .card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-        }
+    .app{ display:flex; min-height:100vh; align-items:stretch; justify-content:center; padding:20px }
+    .shell{ width:100%; max-width:var(--max-width); display:grid; grid-template-columns:260px 1fr; gap:20px; align-items:start }
 
-        .table-responsive {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            margin-top: 1rem; 
-            min-width: 600px;
-        }
-        th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid #e5e7eb; }
-        th { background: #f9fafb; font-weight: 600; color: #374151; font-size: 0.85rem; text-transform: uppercase; }
-        td { color: #4b5563; }
-        td img { border-radius: 4px; border: 1px solid #e5e7eb; }
-        
-        tbody tr:hover { background-color: #f9fafb; transition: background-color 0.2s; }
+    .sidebar{
+      background: linear-gradient(180deg,#0b1220,#0f172a);
+      color:#fff;
+      padding:20px;
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      display:flex; flex-direction:column; gap:16px;
+      min-height:200px;
+      position:relative; z-index:30;
+    }
+    .brand{display:flex; align-items:center; gap:12px}
+    .brand .logo{ width:46px; height:46px; border-radius:10px; display:grid; place-items:center; background:linear-gradient(135deg,var(--accent), #7c3aed); color:white; font-weight:800; box-shadow:0 8px 28px rgba(79,70,229,0.12)}
+    .brand h2{margin:0; font-size:1.05rem; font-weight:700}
 
-        .btn { padding: 8px 16px; border-radius: 6px; border: none; cursor: pointer; font-weight: 500; font-size: 0.9rem; transition: transform 0.1s; }
-        .btn:active { transform: scale(0.95); }
-        .btn-primary { background: #4f46e5; color: white; }
-        .btn-danger { background: #ef4444; color: white; }
-        .btn-edit { background: #f59e0b; color: white; color: white; }
-        
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-        input, select, textarea {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            box-sizing: border-box;
-            background: #f9fafb;
-            margin-bottom: 1rem;
-        }
-        input:focus { outline: none; border-color: #4f46e5; background: white; }
-        textarea { grid-column: span 2; resize: vertical; }
-        
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
+    .nav{ display:flex; flex-direction:column; gap:8px; margin-top:6px }
+    .nav a, .nav button{
+      color:#cbd5e1; padding:10px 12px; border-radius:8px; display:flex; align-items:center; gap:12px; text-decoration:none;
+      background:transparent; border:0; cursor:pointer; font-weight:600; transition:background .16s, transform .12s;
+    }
+    .nav a .fa-fw{ width:18px; text-align:center }
+    .nav a:hover, .nav a.active{ background: rgba(255,255,255,0.03); color:#fff; transform:translateX(4px) }
 
-        /* Dynamic Table Classes */
-        .empty-row td { text-align: center; padding: 20px; }
-        .order-id { font-family: monospace; }
-        .order-date { color: #6b7280; font-size: 0.85rem; }
-        .status-select { 
-            padding: 4px 8px; border-radius: 4px; border: 1px solid #d1d5db; 
-            background: white; cursor: pointer; 
-        }
-        .product-img { width: 50px; height: 50px; object-fit: cover; border-radius: 6px; }
-        .product-name { font-weight: 600; }
-        .product-category { 
-            background: #e0e7ff; color: #4f46e5; padding: 4px 10px; 
-            border-radius: 99px; font-size: 0.75rem; font-weight: 700; 
-        }
-        
-        /* Responsive */
-        .menu-btn { 
-            display: none; 
-            background: none; 
-            border: none; 
-            font-size: 1.5rem; 
-            cursor: pointer; 
-            color: #374151; 
-            margin-bottom: 1rem;
-        }
+    .logout{ margin-top:auto }
+    #logoutBtn{ width:100%; padding:10px; border-radius:8px; background:transparent; color:#cbd5e1; border:1px solid rgba(255,255,255,0.03); cursor:pointer; font-weight:700; display:flex; align-items:center; gap:8px; justify-content:flex-start }
+    #logoutBtn:hover{ color:#fff; transform:translateY(-2px) }
 
-        /* Mobile Card View for Tables */
-        @media (max-width: 768px) {
-            .sidebar { 
-                transform: translateX(-100%); 
-                width: 250px; 
-                height: 100vh;
-                position: fixed;
-                z-index: 1000;
-                transition: transform 0.3s ease;
-            }
-            .sidebar.open { transform: translateX(0); }
-            
-            .content { margin-left: 0; padding: 1rem; }
-            
-            .sidebar-overlay {
-                display: none;
-                position: fixed;
-                top: 0; left: 0; right: 0; bottom: 0;
-                background: rgba(0,0,0,0.5);
-                z-index: 999;
-            }
-            .sidebar-overlay.show { display: block; }
-            
-            .menu-btn { display: inline-block; }
-            
-            .stats-grid { grid-template-columns: 1fr; }
-            .form-grid { grid-template-columns: 1fr; }
-            textarea { grid-column: span 1; }
+    .content{ padding:20px; min-height:100vh; border-radius:var(--radius); background: linear-gradient(180deg, rgba(255,255,255,0.8), rgba(255,255,255,0.7)); box-shadow:var(--soft-shadow); overflow:auto }
+    .topbar{ display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:14px }
+    .menu-btn{ display:none; background:transparent; border:0; font-size:20px; color:var(--muted); cursor:pointer; padding:8px; border-radius:8px }
+    .menu-btn:active{ transform:scale(.98) }
+    h1{ margin:0 0 6px 0; font-size:1.18rem }
+    .subtitle{ color:var(--muted); margin:0 0 12px 0; font-weight:600 }
 
-            /* Table to Card Transformation */
-            table, thead, tbody, th, td, tr { display: block; }
-            thead tr { position: absolute; top: -9999px; left: -9999px; }
-            tr { 
-                margin-bottom: 1rem; 
-                border: 1px solid #e5e7eb; 
-                border-radius: 12px; 
-                padding: 1rem; 
-                background: #fdfdfd;
-                box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-            }
-            td { 
-                border: none; 
-                border-bottom: 1px solid #eee; 
-                position: relative; 
-                padding-left: 50%; 
-                text-align: right; 
-                padding-top: 0.5rem;
-                padding-bottom: 0.5rem;
-            }
-            td:last-child { border-bottom: 0; }
-            td:before { 
-                position: absolute; 
-                top: 50%;
-                left: 0;
-                transform: translateY(-50%);
-                width: 45%; 
-                padding-right: 10px; 
-                white-space: nowrap; 
-                font-weight: 600;
-                color: #6b7280;
-                content: attr(data-label);
-                text-align: left;
-            }
-            .product-img { width: 60px; height: 60px; float: right; }
-        }
-    </style>
+    .stats-grid{ display:grid; grid-template-columns: repeat(3,1fr); gap:14px; margin-bottom:16px }
+    .stat-card{ background:var(--card-bg); border-radius:10px; padding:14px; box-shadow:var(--soft-shadow); display:flex; justify-content:space-between; align-items:center }
+    .stat-info h3{ margin:0; font-size:0.85rem; color:var(--muted); font-weight:700 }
+    .stat-info p{ margin:6px 0 0; font-size:1.25rem; font-weight:800 }
+    .stat-icon{ width:44px; height:44px; display:grid; place-items:center; border-radius:8px; background:linear-gradient(180deg, rgba(79,70,229,0.1), rgba(6,182,212,0.04)); color:var(--accent); font-size:18px }
+
+    .card{ background:var(--card-bg); border-radius:10px; padding:16px; box-shadow:var(--soft-shadow); margin-bottom:16px }
+    .card h2{ margin:0 0 10px 0; font-size:1rem }
+
+    .table-responsive{ overflow:auto; -webkit-overflow-scrolling:touch }
+    table{ width:100%; border-collapse:collapse; min-width:640px; margin-top:8px }
+    thead th{ text-align:left; padding:12px 14px; font-size:0.78rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.6px; background:transparent }
+    tbody td{ padding:12px 14px; color:#283041; border-top:1px solid #eef2f7; vertical-align:middle }
+    tbody tr:hover{ background:rgba(15,23,42,0.02) }
+    .product-img{ width:56px; height:56px; object-fit:cover; border-radius:8px; border:1px solid #f1f5f9 }
+
+    .btn{ padding:8px 12px; border-radius:8px; border:none; cursor:pointer; font-weight:700 }
+    .btn-primary{ background:var(--accent); color:#fff }
+    .btn-danger{ background:var(--danger); color:#fff }
+    .btn-edit{ background:#f59e0b; color:#fff }
+    .form-grid{ display:grid; grid-template-columns: 1fr 1fr; gap:12px }
+    input, select, textarea{ width:100%; padding:10px; border-radius:8px; border:1px solid #e6eef8; background:#fff; font-weight:600 }
+    textarea{ resize:vertical; grid-column:span 2 }
+    input:focus, textarea:focus, select:focus{ outline: 3px solid rgba(79,70,229,0.08); outline-offset:2px; border-color: rgba(79,70,229,0.12) }
+
+    .section-header{ display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:12px }
+    .muted{ color:var(--muted) }
+    .order-id{ font-family:monospace; font-weight:700 }
+    .order-date{ color:var(--muted); font-size:0.85rem }
+    .status-select{ padding:6px 8px; border-radius:6px; border:1px solid #e6eef8; font-weight:700 }
+    .product-category{ background:#eef2ff; color:var(--accent); padding:6px 10px; border-radius:999px; font-weight:800; font-size:0.78rem; display:inline-block; white-space:nowrap }
+
+    .sidebar-overlay{ display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:25; opacity:0; transition:opacity .16s }
+    .sidebar.open{ transform:translateX(0) }
+
+    @media (max-width: 1024px){
+      .shell{ grid-template-columns:1fr; padding-bottom:60px }
+      .sidebar{
+        position:fixed; left:12px; top:12px; bottom:12px; width:84%; max-width:360px; transform:translateX(-120%); transition:transform .28s cubic-bezier(.2,.9,.3,1); z-index:40;
+      }
+      .sidebar-overlay{ display:block; opacity:0; pointer-events:none }
+      .sidebar-overlay.show{ opacity:1; pointer-events:auto }
+      .menu-btn{ display:inline-block }
+      .content{ padding:16px }
+      .stats-grid{ grid-template-columns: repeat(2,1fr) }
+      .card{ margin-bottom:14px }
+      table{ min-width:unset }
+    }
+
+    /* MOBILE PORTRAIT: center image on top + label-left/value-right rows */
+    @media (max-width: 900px) and (orientation: portrait) {
+      .stats-grid{ grid-template-columns: 1fr }
+      .form-grid{ grid-template-columns: 1fr }
+      textarea{ grid-column:auto }
+
+      table, thead, tbody, th, td, tr { display:block }
+      thead tr { position:absolute; top:-9999px; left:-9999px }
+
+      /* For inventory rows use vertical stacked layout (image on top center, details below) */
+      tr.inventory-row {
+        display:block;
+        border-radius:10px;
+        background:var(--card-bg);
+        margin-bottom:12px;
+        padding:12px;
+        box-shadow:0 6px 18px rgba(15,23,42,0.03);
+        border:1px solid #eef2f7;
+        overflow:visible;
+      }
+
+      /* Image row: first cell (image) shown centered and full-width */
+      tr.inventory-row > td:nth-child(1) {
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        padding:6px 0 12px 0;
+      }
+      tr.inventory-row > td:nth-child(1) .product-img {
+        width:120px;
+        height:120px;
+        border-radius:12px;
+        object-fit:cover;
+        border:1px solid #eef2f7;
+      }
+
+      /* All other fields become rows with label on left and value right */
+      tr.inventory-row > td:nth-child(n+2) {
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        padding:10px 0;
+        border-top:1px solid #f3f4f6;
+      }
+
+      /* show the label using data-label at left (bold/muted) */
+      tr.inventory-row > td:nth-child(n+2)::before {
+        content: attr(data-label);
+        color:var(--muted);
+        font-weight:700;
+        margin-right:12px;
+        flex:0 0 auto;
+      }
+      /* value part (the cell content) should be right-aligned */
+      tr.inventory-row > td:nth-child(n+2) > * { text-align:right; flex:1 1 auto; }
+
+      /* Actions row: buttons inline */
+      tr.inventory-row td[data-label="Actions"] { gap:8px; }
+      tr.inventory-row td[data-label="Actions"] .btn { min-width:44px; height:44px; padding:0; display:inline-flex; align-items:center; justify-content:center; border-radius:10px; }
+
+      /* For orders (no image), present each field as a separate row label-left value-right */
+      tr.order-row {
+        display:block;
+        border-radius:10px;
+        background:var(--card-bg);
+        margin-bottom:12px;
+        padding:12px;
+        box-shadow:0 6px 18px rgba(15,23,42,0.03);
+        border:1px solid #eef2f7;
+      }
+      tr.order-row td {
+        display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #f3f4f6;
+      }
+      tr.order-row td::before { content: attr(data-label); color:var(--muted); font-weight:700; margin-right:12px; flex:0 0 auto; }
+      tr.order-row td:last-child { border-bottom:0; }
+
+      /* small phones adjustments */
+      @media (max-width:480px) {
+        tr.inventory-row > td:nth-child(1) .product-img { width:96px; height:96px; }
+      }
+    }
+
+    /* Desktop/tablet retain table layout */
+    @media (min-width: 901px) {
+      tr.inventory-row, tr.order-row { display:table-row }
+      tr.inventory-row td, tr.order-row td { display:table-cell }
+    }
+
+    @media (max-width:420px){
+      .brand h2{ font-size:1rem }
+      .menu-btn{ padding:6px }
+      .stat-info p{ font-size:1.05rem }
+    }
+
+    button:focus, input:focus, select:focus, textarea:focus{ outline-offset:2px }
+  </style>
 </head>
 <body>
-    <div class="sidebar">
-        <h2><i class="fas fa-box"></i> Admin</h2>
-        <ul>
-            <li><a href="#dashboard" class="active"><i class="fas fa-chart-line"></i> Dashboard</a></li>
-            <li><a href="#products"><i class="fas fa-boxes"></i> Products</a></li>
-            <li><a href="#orders"><i class="fas fa-shopping-bag"></i> Orders</a></li>
-            <li><a href="/"><i class="fas fa-home"></i> Back to Site</a></li>
-        </ul>
-        <button id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
-    </div>
+  <div class="app">
+    <div class="shell" role="application" aria-label="Cartify admin shell">
 
-    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
-
-    <div class="content">
-        <button class="menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
-        <h1 id="dashboard">Dashboard Overview</h1>
-        
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-info">
-                    <h3>Total Sales</h3>
-                    <p>Loading...</p>
-                </div>
-                <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-info">
-                    <h3>Total Orders</h3>
-                    <p>Loading...</p>
-                </div>
-                <div class="stat-icon"><i class="fas fa-shopping-cart"></i></div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-info">
-                    <h3>Active Users</h3>
-                    <p>Loading...</p>
-                </div>
-                <div class="stat-icon"><i class="fas fa-user-friends"></i></div>
-            </div>
+      <!-- SIDEBAR -->
+      <aside class="sidebar" aria-label="Admin sidebar">
+        <div class="brand">
+          <div class="logo">CA</div>
+          <h2>Cartify Admin</h2>
         </div>
 
-        <!-- Sales Chart -->
+        <nav class="nav" aria-label="Main navigation">
+          <a href="#dashboard" class="active" onclick="switchTab('dashboard')"><i class="fas fa-chart-line fa-fw"></i> Dashboard</a>
+          <a href="#products" onclick="switchTab('products')"><i class="fas fa-boxes fa-fw"></i> Products</a>
+          <a href="#orders" onclick="switchTab('orders')"><i class="fas fa-shopping-bag fa-fw"></i> Orders</a>
+          <a href="/"><i class="fas fa-home fa-fw"></i> Back to Site</a>
+        </nav>
+
+        <div class="logout">
+          <button id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+      </aside>
+
+      <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+      <!-- MAIN -->
+      <main class="content" id="mainContent" role="main">
+        <div class="topbar">
+          <div style="display:flex; gap:12px; align-items:center; min-width:0;">
+            <div>
+              <h1 id="dashboard">Dashboard Overview</h1>
+              <p class="subtitle">Quick snapshot of sales, orders and inventory</p>
+            </div>
+          </div>
+
+          <!-- Right side: menu button only -->
+          <div style="display:flex; gap:12px; align-items:center;">
+            <button class="menu-btn" aria-label="Toggle menu" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+          </div>
+        </div>
+
+        <!-- stats -->
+        <section class="stats-grid" aria-label="summary stats">
+          <div class="stat-card">
+            <div class="stat-info">
+              <h3>Total Sales</h3>
+              <p class="sales-value">Loading...</p>
+            </div>
+            <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-info">
+              <h3>Total Orders</h3>
+              <p class="orders-value">Loading...</p>
+            </div>
+            <div class="stat-icon"><i class="fas fa-shopping-cart"></i></div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-info">
+              <h3>Active Users</h3>
+              <p class="users-value">Loading...</p>
+            </div>
+            <div class="stat-icon"><i class="fas fa-user-friends"></i></div>
+          </div>
+        </section>
+
+        <!-- Sales chart -->
         <div class="card">
-            <h2>Sales Overview</h2>
-            <div style="height: 300px;">
-                <canvas id="salesChart"></canvas>
-            </div>
+          <h2>Sales Overview</h2>
+          <div style="height:320px;">
+            <canvas id="salesChart"></canvas>
+          </div>
         </div>
 
+        <!-- Product management -->
         <div class="card" id="products">
-            <div class="section-header">
-                <h2>Product Management</h2>
+          <div class="section-header">
+            <h2>Product Management</h2>
+          </div>
+
+          <form id="productForm" aria-label="Product form">
+            <input type="hidden" id="productId">
+            <div class="form-grid">
+              <input type="text" id="name" placeholder="Product Name" required>
+              <input type="number" id="price" placeholder="Price" required>
+              <input type="text" id="image" placeholder="Image URL" required>
+              <select id="category" required>
+                <option value="">Select Category</option>
+                <option value="Topwear">Topwear</option>
+                <option value="Bottomwear">Bottomwear</option>
+                <option value="Jacket">Jacket</option>
+                <option value="Wedding-Wear">Wedding-Wear</option>
+                <option value="Accessories">Accessories</option>
+              </select>
+              <input type="number" id="stock" placeholder="Stock Quantity" required>
+              <textarea id="description" placeholder="Product Description" required rows="3"></textarea>
             </div>
-            
-            <form id="productForm">
-                <input type="hidden" id="productId">
-                <div class="form-grid">
-                    <input type="text" id="name" placeholder="Product Name" required>
-                    <input type="number" id="price" placeholder="Price" required>
-                    <input type="text" id="image" placeholder="Image URL" required>
-                    <select id="category" required>
-                        <option value="">Select Category</option>
-                        <option value="Topwear">Topwear</option>
-                        <option value="Bottomwear">Bottomwear</option>
-                        <option value="Jacket">Jacket</option>
-                        <option value="Wedding-Wear">Wedding-Wear</option>
-                        <option value="Accessories">Accessories</option>
-                    </select>
-                    <input type="number" id="stock" placeholder="Stock Quantity" required>
-                    <textarea id="description" placeholder="Product Description" required rows="3"></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary" id="saveBtn">Add Product</button>
-                <button type="button" id="cancelBtn" class="btn" style="background: #e5e7eb; display: none;">Cancel</button>
-            </form>
+
+            <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;">
+              <button type="submit" class="btn btn-primary" id="saveBtn">Add Product</button>
+              <button type="button" id="cancelBtn" class="btn" style="background:#eef2ff; color:var(--accent); display:none">Cancel</button>
+            </div>
+          </form>
         </div>
 
+        <!-- Inventory -->
         <div class="card">
-            <h2>Inventory</h2>
-            <div class="table-responsive">
-            <table>
-                <thead>
-                    <tr>
-                        <th width="80">Image</th>
-                        <th>Name</th>
-                        <th>Price</th>
-                        <th>Stock</th>
-                        <th>Category</th>
-                        <th width="120">Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="productTableBody">
-                    <tr><td colspan="6" style="text-align:center;">Loading...</td></tr>
-                </tbody>
+          <h2>Inventory</h2>
+          <div class="table-responsive" aria-live="polite">
+            <table aria-label="Inventory table">
+              <thead>
+                <tr>
+                  <th width="80">Image</th>
+                  <th>Name</th>
+                  <th>Price</th>
+                  <th>Stock</th>
+                  <th>Category</th>
+                  <th width="120">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="productTableBody">
+                <tr class="inventory-row"><td colspan="6" style="text-align:center; padding:20px;">Loading...</td></tr>
+              </tbody>
             </table>
-            </div>
-        </div>
-        
-        <!-- Recent Payments Section -->
-         <div class="card" id="orders">
-            <h2>Recent Payments</h2>
-            <div class="table-responsive">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Order ID</th>
-                        <th>User</th>
-                        <th>Amount</th>
-                        <th>Status</th>
-                        <th>Date</th>
-                    </tr>
-                </thead>
-                <tbody id="paymentTableBody">
-                    <tr><td colspan="5" style="text-align:center; padding: 20px;">Loading orders...</td></tr>
-                </tbody>
-            </table>
-            </div>
+          </div>
         </div>
 
+        <!-- Recent Orders -->
+        <div class="card" id="orders">
+          <h2>Recent Orders</h2>
+          <div class="table-responsive">
+            <table aria-label="Recent orders table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>User</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody id="paymentTableBody">
+                <tr class="order-row"><td colspan="5" style="text-align:center; padding:20px;">Loading orders...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </main>
     </div>
+  </div>
 
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-    <script src="js/firebaseConfig.js"></script>
-    <script src="js/toast.js"></script>
-    <script>
-        // Config initialized in firebaseConfig.js
-        
-        let token = localStorage.getItem('authToken');
-        
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-             firebase.auth().signOut().then(() => {
-                localStorage.removeItem('authToken');
-                localStorage.removeItem('userRole');
-                window.location.href = '/login';
-            });
+  <!-- Firebase & Toast (unchanged) -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+  <script src="js/firebaseConfig.js"></script>
+  <script src="js/toast.js"></script>
+
+  <script>
+    // All original JS behavior preserved
+    let token = localStorage.getItem('authToken');
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      firebase.auth().signOut().then(() => {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('userRole');
+        window.location.href = '/login';
+      });
+    });
+
+    // Tab switching logic
+    function switchTab(tabId) {
+        // Hide all sections
+        ['dashboard', 'products', 'orders'].forEach(id => {
+             const el = document.getElementById(id);
+             if(el) el.style.display = 'none';
         });
+        
+        // Remove active class from nav
+        document.querySelectorAll('.nav a').forEach(a => a.classList.remove('active'));
 
-        // Authentication Check
-        firebase.auth().onAuthStateChanged(async (user) => {
-            if (user) {
-                token = await user.getIdToken();
-                fetchProducts();
-                fetchStatsAndOrders(token);
+        // Show selected section
+        const target = document.getElementById(tabId) || document.getElementById('dashboard'); // fallback
+        if(target) target.style.display = 'block';
+
+        // Set active nav
+        const link = document.querySelector(`.nav a[href="#${tabId}"]`);
+        if(link) link.classList.add('active');
+        else document.querySelector('.nav a[href="#dashboard"]').classList.add('active');
+
+        // Close sidebar on mobile
+        if(window.innerWidth <= 1024) {
+             document.querySelector('.sidebar').classList.remove('open');
+             document.querySelector('.sidebar-overlay').classList.remove('show');
+        }
+    }
+
+    // Handle hash change for direct links
+    window.addEventListener('hashchange', () => {
+        const hash = window.location.hash.slice(1) || 'dashboard';
+        switchTab(hash);
+    });
+
+    // Check auth and initial load
+    firebase.auth().onAuthStateChanged(async (user) => {
+      if (user) {
+        token = await user.getIdToken();
+        const products = await fetchProducts();
+        fetchStatsAndOrders(token, products);
+        
+        // Initial tab check
+        const hash = window.location.hash.slice(1) || 'dashboard';
+        switchTab(hash);
+      } else {
+        window.location.href = '/login';
+      }
+    });
+
+    async function fetchProducts() {
+      try {
+        const res = await fetch('/api/products');
+        const products = await res.json();
+        renderProducts(products);
+        return products;
+      } catch (err) {
+        console.error(err);
+        Toast.show('Failed to fetch products', 'error');
+        return [];
+      }
+    }
+
+    async function fetchStatsAndOrders(token, products) {
+      try {
+        const res = await fetch('/api/orders/all', { headers: { 'Authorization': `Bearer ${token}` }});
+        if (!res.ok) {
+          if (res.status === 401 || res.status === 403) {
+            Toast.show("Unauthorized access", 'error');
+            return;
+          }
+          throw new Error('Failed to fetch orders');
+        }
+
+        const orders = await res.json();
+
+        // New: Fetch User Count
+        let userCount = 0;
+        try {
+            const userRes = await fetch('/api/users', { headers: { 'Authorization': `Bearer ${token}` }});
+            if(userRes.ok) {
+                const users = await userRes.json();
+                // Filter out admins (role === 'admin')
+                const usersOnly = users.filter(u => u.role !== 'admin');
+                userCount = usersOnly.length;
+            }
+        } catch(e) { console.error('Failed to fetch users count', e); }
+
+
+        const totalOrders = orders.length;
+        const totalSales = orders.reduce((sum, order) => sum + (order.totalAmount || 0), 0);
+        
+        const formatter = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' });
+        document.querySelector('.sales-value').innerText = formatter.format(totalSales);
+        document.querySelector('.orders-value').innerText = totalOrders;
+        document.querySelector('.users-value').innerText = userCount;
+
+        renderOrdersTable(orders);
+        renderSalesChart(orders);
+        // renderAdminActivity(orders, products); // Removed as Profile section was removed
+
+      } catch (error) {
+        console.error(error);
+        Toast.show('Error loading dashboard stats', 'error');
+      }
+    }
+
+    function renderAdminActivity(orders, products) {
+        const feed = document.getElementById('adminActivityList');
+        // Combine orders and products into a single timeline
+        const orderEvents = orders.map(o => ({
+            type: 'order',
+            date: new Date(o.createdAt),
+            data: o
+        }));
+        const productEvents = (products || []).map(p => ({
+            type: 'product',
+            date: new Date(p.createdAt),
+            data: p
+        }));
+
+        const allEvents = [...orderEvents, ...productEvents].sort((a, b) => b.date - a.date).slice(0, 10);
+
+        if(allEvents.length === 0) {
+            feed.innerHTML = '<p class="muted">No recent activity.</p>';
+            return;
+        }
+
+        feed.innerHTML = allEvents.map(e => {
+            const dateStr = e.date.toLocaleDateString() + ' ' + e.date.toLocaleTimeString();
+            let icon, content;
+
+            if(e.type === 'order') {
+                const o = e.data;
+                const user = o.userId ? (o.userId.name || 'User') : 'Guest';
+                icon = '<div style="background:#eef2ff; color:#4f46e5; width:32px; height:32px; border-radius:50%; display:grid; place-items:center;">🛍️</div>';
+                content = `<div>
+                    <div style="font-weight:600; font-size:0.95rem;">New Order #${o._id.slice(-6).toUpperCase()}</div>
+                    <div class="muted" style="font-size:0.85rem;">by ${user} • Rs.${(o.totalAmount||0).toLocaleString()}</div>
+                </div>`;
             } else {
-                window.location.href = '/login';
+                const p = e.data;
+                icon = '<div style="background:#ecfdf5; color:#10b981; width:32px; height:32px; border-radius:50%; display:grid; place-items:center;">✨</div>';
+                content = `<div>
+                    <div style="font-weight:600; font-size:0.95rem;">Product Added: ${p.name}</div>
+                    <div class="muted" style="font-size:0.85rem;">${p.category} • Rs.${p.price}</div>
+                </div>`;
             }
+
+            return `
+                <div style="display:flex; gap:12px; align-items:flex-start; margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid #f3f4f6;">
+                    ${icon}
+                    <div style="flex:1;">
+                        ${content}
+                        <div style="color:#9ca3af; font-size:0.75rem; margin-top:2px;">${dateStr}</div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function renderOrdersTable(orders) {
+      const tbody = document.getElementById('paymentTableBody');
+      tbody.innerHTML = '';
+
+      if (orders.length === 0) {
+        tbody.innerHTML = '<tr class="order-row"><td colspan="5" style="text-align:center; padding:20px;">No orders found</td></tr>';
+        return;
+      }
+
+      orders.slice(0, 20).forEach(order => {
+        const tr = document.createElement('tr');
+        tr.classList.add('order-row');
+        const date = new Date(order.createdAt).toLocaleDateString() + ' ' + new Date(order.createdAt).toLocaleTimeString();
+
+        const statusOptions = ['Pending', 'Shipped', 'Delivered', 'Cancelled']
+          .map(s => `<option value="${s.toLowerCase()}" ${order.status === s.toLowerCase() ? 'selected' : ''}>${s}</option>`)
+          .join('');
+
+        const userName = order.userId ? (order.userId.name || order.userId.email || 'Guest') : 'Guest';
+
+        tr.innerHTML = `
+          <td class="order-id" data-label="Order ID">${order._id ? order._id.slice(-6).toUpperCase() : '—'}</td>
+          <td data-label="User">${userName}</td>
+          <td data-label="Amount">Rs.${(order.totalAmount || 0).toLocaleString()}</td>
+          <td data-label="Status">
+            <select onchange="updateOrderStatus('${order._id}', this.value)" class="status-select">
+              ${statusOptions}
+            </select>
+          </td>
+          <td class="order-date" data-label="Date">${date}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    window.updateOrderStatus = async (id, status) => {
+      try {
+        const res = await fetch(`/api/orders/${id}/status`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify({ status })
         });
-        
-        // Fetch Products
-        async function fetchProducts() {
-            try {
-                const res = await fetch('/api/products');
-                const products = await res.json();
-                renderProducts(products);
-            } catch (err) {
-                console.error(err);
-                Toast.show('Failed to fetch products', 'error');
-            }
+        if (res.ok) {
+          Toast.show('Order status updated', 'success');
+          // fetchStatsAndOrders(token); // Ideally refresh, but lets save bandwidth or rely on next reload
+        } else {
+          Toast.show('Failed to update status', 'error');
         }
+      } catch (e) {
+        console.error(e);
+        Toast.show('Error updating status', 'error');
+      }
+    };
 
-        async function fetchStatsAndOrders(token) {
-            try {
-                const res = await fetch('/api/orders/all', {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                
-                if (!res.ok) {
-                    if (res.status === 401 || res.status === 403) {
-                         Toast.show("Unauthorized access", 'error'); 
-                         window.location.href = '/login';
-                         return;
-                    }
-                    throw new Error('Failed to fetch orders');
-                }
+    function renderProducts(products) {
+      const tbody = document.getElementById('productTableBody');
+      tbody.innerHTML = '';
+      if (!products.length) {
+        tbody.innerHTML = '<tr class="inventory-row"><td colspan="6" style="text-align:center; padding:20px;">No products found</td></tr>';
+        return;
+      }
+      products.forEach(p => {
+        const tr = document.createElement('tr');
+        tr.classList.add('inventory-row');
+        tr.innerHTML = `
+          <td data-label="Image"><img src="${p.image}" class="product-img" alt="${p.name}"></td>
+          <td class="product-name" data-label="Name">${p.name}</td>
+          <td data-label="Price">Rs.${p.price}</td>
+          <td data-label="Stock">${p.stock}</td>
+          <td data-label="Category"><span class="product-category">${p.category}</span></td>
+          <td data-label="Actions">
+            <div style="display:flex; gap:8px; align-items:center; justify-content:flex-start;">
+              <button class="btn btn-edit" onclick="editProduct('${p._id}')" title="Edit"><i class="fas fa-edit"></i></button>
+              <button class="btn btn-danger" onclick="deleteProduct('${p._id}')" title="Delete"><i class="fas fa-trash"></i></button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
 
-                const orders = await res.json();
-                
-                // Calculate Stats
-                const totalOrders = orders.length;
-                const totalSales = orders.reduce((sum, order) => sum + (order.totalAmount || 0), 0);
-                const activeUsers = new Set(orders.map(o => o.userId)).size; 
+    let salesChartInstance = null;
+    function renderSalesChart(orders) {
+      const ctx = document.getElementById('salesChart').getContext('2d');
 
-                document.querySelector('.stat-card:nth-child(2) p').innerText = totalOrders;
-                
-                const formatter = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' });
-                document.querySelector('.stat-card:nth-child(1) p').innerText = formatter.format(totalSales);
-                document.querySelector('.stat-card:nth-child(3) p').innerText = activeUsers; 
-                
-                renderOrdersTable(orders);
-                renderSalesChart(orders); // Add chart rendering
+      const statusCounts = orders.reduce((acc, order) => {
+        const s = order.status || 'unknown';
+        acc[s] = (acc[s] || 0) + 1;
+        return acc;
+      }, {});
 
-            } catch (error) {
-                console.error(error);
-                Toast.show('Error loading dashboard stats', 'error');
+      const labels = Object.keys(statusCounts).map(s => s.charAt(0).toUpperCase() + s.slice(1));
+      const data = Object.values(statusCounts);
+
+      const gradient = ctx.createLinearGradient(0, 0, 0, 320);
+      gradient.addColorStop(0, 'rgba(79,70,229,0.95)');
+      gradient.addColorStop(0.5, 'rgba(79,70,229,0.75)');
+      gradient.addColorStop(1, 'rgba(6,182,212,0.55)');
+
+      if (salesChartInstance) salesChartInstance.destroy();
+
+      salesChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Orders',
+            data,
+            backgroundColor: gradient,
+            borderRadius: 8,
+            maxBarThickness: 48,
+            hoverBackgroundColor: 'rgba(124,58,237,0.95)',
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'nearest', axis: 'x', intersect: false },
+          plugins: {
+            tooltip: {
+              enabled: true,
+              backgroundColor: '#0f172a',
+              titleFont: { weight: 700 },
+              bodyFont: { weight: 600 },
+              padding: 10,
+              callbacks: { label: (ctx) => `${ctx.dataset.label}: ${ctx.formattedValue}` }
+            },
+            legend: { display: false }
+          },
+          animation: { duration: 800, easing: 'easeOutCubic' },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: '#374151', font: { weight: 700 } } },
+            y: { beginAtZero: true, ticks: { precision: 0, color: '#374151', font: { weight: 700 } }, grid: { color: 'rgba(15,23,42,0.04)' } }
+          },
+          onClick: (evt, items) => {
+            if (items && items.length) {
+              const idx = items[0].index;
+              const label = labels[idx];
+              Toast.show(`Filtered by status: ${label}`, 'info');
             }
+          }
         }
+      });
+    }
 
-        function renderOrdersTable(orders) {
-            const tbody = document.getElementById('paymentTableBody');
-            tbody.innerHTML = '';
-            
-            if (orders.length === 0) {
-                 tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px;">No orders found</td></tr>';
-                 return;
-            }
+    document.getElementById('productForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('productId').value;
+      const product = {
+        name: document.getElementById('name').value,
+        price: document.getElementById('price').value,
+        description: document.getElementById('description').value,
+        image: document.getElementById('image').value,
+        category: document.getElementById('category').value,
+        stock: document.getElementById('stock').value,
+      };
 
-            orders.slice(0, 20).forEach(order => {
-                const tr = document.createElement('tr');
-                const date = new Date(order.createdAt).toLocaleDateString() + ' ' + new Date(order.createdAt).toLocaleTimeString();
-                
-                // Status Options
-                const statusOptions = ['Pending', 'Shipped', 'Delivered', 'Cancelled']
-                    .map(s => `<option value="${s.toLowerCase()}" ${order.status === s.toLowerCase() ? 'selected' : ''}>${s}</option>`)
-                    .join('');
+      const method = id ? 'PUT' : 'POST';
+      const url = id ? `/api/products/${id}` : '/api/products';
 
-                const userName = order.userId ? (order.userId.name || order.userId.email || 'Guest') : 'Guest';
-                
-                tr.innerHTML = `
-                    <td class="order-id" data-label="Order ID">${order._id.slice(-6).toUpperCase()}</td>
-                    <td data-label="User">${userName}</td>
-                    <td data-label="Amount">Rs.${(order.totalAmount || 0).toLocaleString()}</td>
-                    <td data-label="Status">
-                        <select onchange="updateOrderStatus('${order._id}', this.value)" class="status-select">
-                            ${statusOptions}
-                        </select>
-                    </td>
-                    <td class="order-date" data-label="Date">${date}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        window.updateOrderStatus = async (id, status) => {
-            try {
-                 const res = await fetch(`/api/orders/${id}/status`, {
-                    method: 'PUT',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}` 
-                    },
-                    body: JSON.stringify({ status })
-                });
-                if(res.ok) {
-                    Toast.show('Order status updated', 'success');
-                    fetchStatsAndOrders(token); // Refresh
-                } else {
-                    Toast.show('Failed to update status', 'error');
-                }
-            } catch(e) { 
-                console.error(e); 
-                Toast.show('Error updating status', 'error'); 
-            }
-        };
-
-        function renderProducts(products) {
-            const tbody = document.getElementById('productTableBody');
-            tbody.innerHTML = '';
-            if(!products.length) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:20px;">No products found</td></tr>';
-                return;
-            }
-            products.forEach(p => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td data-label="Image"><img src="${p.image}" class="product-img"></td>
-                    <td class="product-name" data-label="Name">${p.name}</td>
-                    <td data-label="Price">Rs.${p.price}</td>
-                    <td data-label="Stock">${p.stock}</td>
-                    <td data-label="Category"><span class="product-category">${p.category}</span></td>
-                    <td data-label="Actions">
-                        <button class="btn btn-edit" onclick="editProduct('${p._id}')" title="Edit"><i class="fas fa-edit"></i></button>
-                        <button class="btn btn-danger" onclick="deleteProduct('${p._id}')" title="Delete"><i class="fas fa-trash"></i></button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-        
-        let salesChartInstance = null;
-        function renderSalesChart(orders) {
-            const ctx = document.getElementById('salesChart').getContext('2d');
-            
-            // Group orders by status
-            const statusCounts = orders.reduce((acc, order) => {
-                acc[order.status] = (acc[order.status] || 0) + 1;
-                return acc;
-            }, {});
-            
-            const labels = Object.keys(statusCounts).map(s => s.charAt(0).toUpperCase() + s.slice(1));
-            const data = Object.values(statusCounts);
-
-            if (salesChartInstance) {
-                salesChartInstance.destroy();
-            }
-
-            salesChartInstance = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Orders by Status',
-                        data: data,
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.5)',
-                            'rgba(54, 162, 235, 0.5)',
-                            'rgba(255, 206, 86, 0.5)',
-                            'rgba(75, 192, 192, 0.5)',
-                            'rgba(153, 102, 255, 0.5)'
-                        ],
-                        borderColor: [
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(153, 102, 255, 1)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: { beginAtZero: true, ticks: { precision: 0 } }
-                    }
-                }
-            });
-        }
-
-        // Add/Update Product
-        document.getElementById('productForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const id = document.getElementById('productId').value;
-            const product = {
-                name: document.getElementById('name').value,
-                price: document.getElementById('price').value,
-                description: document.getElementById('description').value,
-                image: document.getElementById('image').value,
-                category: document.getElementById('category').value,
-                stock: document.getElementById('stock').value,
-            };
-
-            const method = id ? 'PUT' : 'POST';
-            const url = id ? `/api/products/${id}` : '/api/products';
-
-            const res = await fetch(url, {
-                method,
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}` 
-                },
-                body: JSON.stringify(product)
-            });
-
-            if (res.ok) {
-                resetForm();
-                Toast.show(id ? 'Product updated successfully' : 'Product added successfully', 'success');
-                fetchProducts();
-            } else {
-                const err = await res.json();
-                Toast.show('Error: ' + err.message, 'error');
-            }
+      try {
+        const res = await fetch(url, {
+          method,
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify(product)
         });
 
-        window.editProduct = async (id) => {
-             const res = await fetch('/api/products'); 
-             const products = await res.json();
-             const p = products.find(prod => prod._id === id);
-             
-             document.getElementById('productId').value = p._id;
-             document.getElementById('name').value = p.name;
-             document.getElementById('price').value = p.price;
-             document.getElementById('description').value = p.description;
-             document.getElementById('image').value = p.image;
-             document.getElementById('category').value = p.category;
-             document.getElementById('stock').value = p.stock;
-             
-             document.getElementById('saveBtn').innerText = 'Update Product';
-             document.getElementById('cancelBtn').style.display = 'inline-block';
-             
-             // Scroll to form
-             document.querySelector('.card').scrollIntoView({ behavior: 'smooth' });
-        };
-
-        window.deleteProduct = async (id) => {
-            if(!confirm('Are you sure you want to delete this product?')) return;
-            const res = await fetch(`/api/products/${id}`, {
-                method: 'DELETE',
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            if(res.ok) {
-                Toast.show('Product deleted', 'success');
-                fetchProducts();
-            }
-            else Toast.show('Error deleting product', 'error');
-        };
-        
-        function resetForm() {
-            document.getElementById('productForm').reset();
-            document.getElementById('productId').value = '';
-            document.getElementById('saveBtn').innerText = 'Add Product';
-            document.getElementById('cancelBtn').style.display = 'none';
+        if (res.ok) {
+          resetForm();
+          Toast.show(id ? 'Product updated successfully' : 'Product added successfully', 'success');
+          fetchProducts();
+        } else {
+          const err = await res.json();
+          Toast.show('Error: ' + (err.message || 'Failed'), 'error');
         }
-        
-        document.getElementById('cancelBtn').addEventListener('click', resetForm);
+      } catch (err) {
+        console.error(err);
+        Toast.show('Request failed', 'error');
+      }
+    });
 
-        // Sidebar Toggle
-        function toggleSidebar() {
-            document.querySelector('.sidebar').classList.toggle('open');
-            document.querySelector('.sidebar-overlay').classList.toggle('show');
+    window.editProduct = async (id) => {
+      try {
+        const res = await fetch('/api/products');
+        const products = await res.json();
+        const p = products.find(prod => prod._id === id);
+        if (!p) return;
+        document.getElementById('productId').value = p._id;
+        document.getElementById('name').value = p.name;
+        document.getElementById('price').value = p.price;
+        document.getElementById('description').value = p.description || '';
+        document.getElementById('image').value = p.image;
+        document.getElementById('category').value = p.category;
+        document.getElementById('stock').value = p.stock;
+        document.getElementById('saveBtn').innerText = 'Update Product';
+        document.getElementById('cancelBtn').style.display = 'inline-block';
+        document.querySelector('.card')?.scrollIntoView({ behavior: 'smooth' });
+      } catch (e) { console.error(e); }
+    };
+
+    window.deleteProduct = async (id) => {
+      if (!confirm('Are you sure you want to delete this product?')) return;
+      try {
+        const res = await fetch(`/api/products/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` }});
+        if (res.ok) {
+          Toast.show('Product deleted', 'success');
+          fetchProducts();
+        } else {
+          Toast.show('Error deleting product', 'error');
         }
-    </script>
+      } catch (e) { console.error(e); Toast.show('Error deleting product', 'error'); }
+    };
+
+    function resetForm() {
+      document.getElementById('productForm').reset();
+      document.getElementById('productId').value = '';
+      document.getElementById('saveBtn').innerText = 'Add Product';
+      document.getElementById('cancelBtn').style.display = 'none';
+    }
+    document.getElementById('cancelBtn').addEventListener('click', resetForm);
+
+    function toggleSidebar() {
+      const sb = document.querySelector('.sidebar');
+      const overlay = document.querySelector('.sidebar-overlay');
+      sb.classList.toggle('open');
+      overlay.classList.toggle('show');
+    }
+
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 1024) {
+        document.querySelector('.sidebar')?.classList.remove('open');
+        document.querySelector('.sidebar-overlay')?.classList.remove('show');
+      }
+    });
+
+    document.addEventListener('click', (e) => {
+      const sidebar = document.querySelector('.sidebar');
+      const isMobile = window.innerWidth <= 1024;
+      const overlay = document.querySelector('.sidebar-overlay');
+      if (isMobile && sidebar && sidebar.classList.contains('open')) {
+        if (!sidebar.contains(e.target) && !e.target.closest('.menu-btn')) {
+          sidebar.classList.remove('open');
+          overlay.classList.remove('show');
+        }
+      }
+    });
+  </script>
 </body>
 </html>

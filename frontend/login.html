@@ -1,299 +1,350 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Cartify</title>
-    <link rel="icon" href="img/payment.png" type="image/x-icon">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
-        
-        body { 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            min-height: 100vh; 
-            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-            background-size: 400% 400%;
-            animation: gradient 15s ease infinite;
-            font-family: 'Inter', sans-serif; 
-            margin: 0;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - Cartify</title>
+  <link rel="icon" href="img/payment.png" type="image/x-icon">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        .container {
-            width: 100%;
-            max-width: 400px;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 2.5rem;
-            border-radius: 16px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
-            backdrop-filter: blur(10px);
-            animation: fadeInUp 0.6s ease-out;
-        }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        h2 { 
-            text-align: center; 
-            color: #111827; 
-            margin-bottom: 1.5rem;
-        }
-        
-        /* Tabs */
-        .tabs {
-            display: flex;
-            margin-bottom: 1.5rem;
-            border-bottom: 2px solid #e5e7eb;
-        }
-        .tab {
-            flex: 1;
-            text-align: center;
-            padding: 0.75rem;
-            cursor: pointer;
-            font-weight: 600;
-            color: #6b7280;
-            transition: all 0.3s;
-        }
-        .tab.active {
-            color: #4f46e5;
-            border-bottom: 2px solid #4f46e5;
-            margin-bottom: -2px;
-        }
-        
-        /* Forms */
-        .form-group {
-            margin-bottom: 1rem;
-        }
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #374151;
-            font-size: 0.9rem;
-        }
-        input {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            box-sizing: border-box;
-            font-size: 1rem;
-        }
-        input:focus {
-            outline: none;
-            border-color: #4f46e5;
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-        }
-        
-        .btn {
-            width: 100%;
-            padding: 0.75rem;
-            border: none;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .btn-primary {
-            background: #4f46e5;
-            color: white;
-            margin-bottom: 1rem;
-        }
-        .btn-primary:hover {
-            background: #4338ca;
-        }
-        
-        .divider {
-            display: flex;
-            align-items: center;
-            text-align: center;
-            margin: 1.5rem 0;
-            color: #9ca3af;
-        }
-        .divider::before, .divider::after {
-            content: '';
-            flex: 1;
-            border-bottom: 1px solid #e5e7eb;
-        }
-        .divider span {
-            padding: 0 10px;
-            font-size: 0.85rem;
-        }
-        
-        .google-btn { 
-            background: #ffffff; 
-            color: #374151; 
-            border: 1px solid #d1d5db; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            gap: 10px; 
-        }
-        .google-btn:hover { 
-            background: #f9fafb; 
-        }
+    :root{
+      --accent-1: #6d28d9; /* purple */
+      --accent-2: #06b6d4; /* teal */
+      --accent-3: #ff7a59; /* coral */
+      --card: rgba(255,255,255,0.92);
+      --muted: #6b7280;
+      --glass-shadow: 0 10px 30px rgba(11,17,28,0.12);
+      --radius: 16px;
+    }
 
-        .hidden { display: none; }
-    </style>
+    * { box-sizing: border-box; }
+    html,body { height:100%; margin:0; font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; color:#0f172a; }
+
+    /* --- Modern animated background --- */
+    body{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height:100vh;
+      background: linear-gradient(180deg, #f7f9fc 0%, #eef6fb 40%, #f3f6ff 100%);
+      overflow:hidden;
+    }
+
+    /* Decorative floating blobs using pseudo elements & divs */
+    .bg {
+      position:fixed;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      overflow:hidden;
+    }
+    .blob {
+      position:absolute;
+      filter: blur(36px) saturate(110%);
+      opacity:0.22;
+      transform: translate3d(0,0,0);
+      will-change: transform, opacity;
+      border-radius: 50%;
+      mix-blend-mode: screen;
+      animation: floatY 9s ease-in-out infinite;
+    }
+    .blob.b1 { width:520px; height:520px; left:-10%; top:-8%; background: radial-gradient(circle at 30% 30%, var(--accent-1), transparent 35%), linear-gradient(135deg, var(--accent-1), var(--accent-2)); animation-duration: 12s; }
+    .blob.b2 { width:420px; height:420px; right:-8%; bottom:-12%; background: linear-gradient(135deg, var(--accent-2), var(--accent-3)); opacity:0.18; animation-duration: 10s; animation-delay: 1.5s; }
+    .blob.b3 { width:260px; height:260px; left:30%; bottom:6%; background: linear-gradient(135deg, #ffd6a5, #ff7a59); opacity:0.12; animation-duration: 14s; animation-delay: 0.6s; }
+
+    @keyframes floatY {
+      0% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-18px) scale(1.02); }
+      100% { transform: translateY(0) scale(1); }
+    }
+
+    /* subtle grid lines / vignette */
+    .vignette {
+      position:fixed; inset:0; z-index:0; pointer-events:none;
+      background: radial-gradient(1200px 600px at 10% 10%, rgba(99,102,241,0.03), transparent 8%),
+                  radial-gradient(900px 500px at 95% 90%, rgba(6,182,212,0.02), transparent 8%);
+      mix-blend-mode: normal;
+    }
+
+    /* Container */
+    .wrap {
+      position:relative;
+      z-index:10;
+      width:100%;
+      max-width:420px;
+      margin: 28px;
+      padding: 28px;
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--glass-shadow);
+      backdrop-filter: blur(6px) saturate(120%);
+      border: 1px solid rgba(13,18,31,0.04);
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .wrap:focus-within, .wrap:hover { transform: translateY(-4px); box-shadow: 0 18px 50px rgba(11,17,28,0.12); }
+
+    h2 { text-align:center; color:#0f172a; margin: 0 0 12px 0; font-weight:700; font-size:1.25rem; }
+    .sub { text-align:center; color:var(--muted); font-size:0.9rem; margin-bottom:10px; }
+
+    /* Tabs */
+    .tabs { display:flex; gap:8px; margin-bottom: 18px; justify-content:center; }
+    .tab {
+      padding: 8px 14px;
+      border-radius: 999px;
+      cursor:pointer;
+      font-weight:600;
+      color:var(--muted);
+      background: transparent;
+      border: 1px solid transparent;
+      transition: all .18s ease;
+      font-size:0.95rem;
+    }
+    .tab.active {
+      background: linear-gradient(90deg, rgba(109,40,217,0.12), rgba(6,182,212,0.06));
+      color: var(--accent-1);
+      box-shadow: 0 6px 18px rgba(99,102,241,0.06);
+      border-color: rgba(99,102,241,0.06);
+    }
+
+    form { margin-top: 6px; }
+    .form-group { margin-bottom: 12px; }
+    label { display:block; font-size:0.88rem; margin-bottom:6px; color:#334155; font-weight:600; }
+    input {
+      width:100%;
+      padding: 12px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(15,23,42,0.06);
+      background: rgba(255,255,255,0.9);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+      font-size:1rem;
+      transition: box-shadow .14s, border-color .14s;
+    }
+    input:focus {
+      outline:none;
+      border-color: rgba(99,102,241,0.9);
+      box-shadow: 0 6px 20px rgba(99,102,241,0.08);
+    }
+
+    .btn {
+      width:100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      font-weight:700;
+      font-size:1rem;
+      cursor:pointer;
+    }
+    .btn-primary {
+      background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+      color:white;
+      box-shadow: 0 10px 30px rgba(79,70,229,0.12);
+      transition: transform .12s ease, box-shadow .12s;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 18px 40px rgba(79,70,229,0.12); }
+    .google-btn {
+      width:100%;
+      margin-top: 12px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding: 10px;
+      border-radius:10px;
+      background: white;
+      border: 1px solid rgba(15,23,42,0.04);
+      cursor:pointer;
+      font-weight:700;
+    }
+    .google-btn img { display:inline-block; vertical-align:middle; }
+
+    .divider {
+      display:flex; gap:10px; align-items:center; margin: 14px 0; color:var(--muted); font-weight:600; font-size:0.85rem;
+    }
+    .divider::before, .divider::after { content:""; flex:1; height:1px; background:linear-gradient(90deg, transparent, rgba(15,23,42,0.04), transparent); border-radius:1px; }
+
+    .hidden { display:none; }
+
+    /* small screens and niceties */
+    @media (max-width: 480px) {
+      .wrap { padding:18px; margin: 18px; max-width: 92%; border-radius: 14px; }
+      h2 { font-size:1.1rem; }
+      .tabs { gap:6px; }
+      .tab { padding: 7px 10px; font-size:0.92rem; }
+      input { padding: 10px; border-radius:8px; font-size:0.95rem; }
+      .btn-primary { padding: 11px; border-radius: 8px; }
+      .google-btn { padding: 10px; font-size:0.95rem; }
+      .blob.b1 { display:none; } /* hide large blobs on tiny screens to reduce clutter */
+      .blob.b2 { opacity:0.12; transform:scale(0.9); }
+    }
+
+    @media (min-width: 920px) {
+      .wrap { transform: translateZ(0); } /* help GPU */
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="tabs">
-            <div class="tab active" onclick="switchTab('login')">Login</div>
-            <div class="tab" onclick="switchTab('register')">Register</div>
-        </div>
 
-        <!-- Login Form -->
-        <div id="login-form">
-            <h2>Welcome Back</h2>
-            <form onsubmit="handleLogin(event)">
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="login-email" required>
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="login-password" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Login</button>
-            </form>
-        </div>
+  <!-- background decorative layer (animated blobs + subtle vignette) -->
+  <div class="bg" aria-hidden="true">
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="blob b3"></div>
+  </div>
+  <div class="vignette" aria-hidden="true"></div>
 
-        <!-- Register Form -->
-        <div id="register-form" class="hidden">
-            <h2>Create Account</h2>
-            <form onsubmit="handleRegister(event)">
-                <div class="form-group">
-                    <label>Name</label>
-                    <input type="text" id="reg-name" required>
-                </div>
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="reg-email" required>
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="reg-password" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Register</button>
-            </form>
-        </div>
-
-        <div class="divider">
-            <span>OR CONTINUE WITH</span>
-        </div>
-
-        <button class="btn google-btn" onclick="signInWithGoogle()">
-            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20">
-            Google
-        </button>
+  <!-- main card -->
+  <div class="wrap" role="main" aria-labelledby="authTitle">
+    <div style="text-align:center; margin-bottom:6px;">
+      <h2 id="authTitle">Welcome to Cartify</h2>
+      <div class="sub">Sign in to manage your products and orders</div>
     </div>
 
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-    <script src="js/firebaseConfig.js"></script>
-    <script src="js/toast.js"></script>
-    <script>
-        // Config initialized in firebaseConfig.js
+    <div class="tabs" role="tablist" aria-label="Authentication tabs">
+      <div class="tab active" role="tab" aria-selected="true" onclick="switchTab('login')">Login</div>
+      <div class="tab" role="tab" aria-selected="false" onclick="switchTab('register')">Register</div>
+    </div>
 
-        const auth = firebase.auth();
+    <!-- Login Form -->
+    <div id="login-form" role="region" aria-label="Login form">
+      <form onsubmit="handleLogin(event)" novalidate>
+        <div class="form-group">
+          <label for="login-email">Email</label>
+          <input id="login-email" type="email" required autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <input id="login-password" type="password" required autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn btn-primary">Login</button>
+      </form>
+    </div>
 
-        function switchTab(tab) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            if(tab === 'login') {
-                document.querySelector('.tab:nth-child(1)').classList.add('active');
-                document.getElementById('login-form').classList.remove('hidden');
-                document.getElementById('register-form').classList.add('hidden');
+    <!-- Register Form -->
+    <div id="register-form" class="hidden" role="region" aria-label="Register form">
+      <form onsubmit="handleRegister(event)" novalidate>
+        <div class="form-group">
+          <label for="reg-name">Name</label>
+          <input id="reg-name" type="text" required autocomplete="name">
+        </div>
+        <div class="form-group">
+          <label for="reg-email">Email</label>
+          <input id="reg-email" type="email" required autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label for="reg-password">Password</label>
+          <input id="reg-password" type="password" required autocomplete="new-password">
+        </div>
+        <button type="submit" class="btn btn-primary">Register</button>
+      </form>
+    </div>
+
+    <div class="divider"><span>OR CONTINUE WITH</span></div>
+
+    <button class="google-btn" onclick="signInWithGoogle()" aria-label="Continue with Google">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20" height="20" alt="">
+      Continue with Google
+    </button>
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+  <script src="js/firebaseConfig.js"></script>
+  <script src="js/toast.js"></script>
+
+  <!-- original JS preserved (login/register/google + backend sync) -->
+  <script>
+    // Config initialized in firebaseConfig.js
+    const auth = firebase.auth();
+
+    function switchTab(tab) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      if(tab === 'login') {
+        document.querySelector('.tab:nth-child(1)').classList.add('active');
+        document.getElementById('login-form').classList.remove('hidden');
+        document.getElementById('register-form').classList.add('hidden');
+      } else {
+        document.querySelector('.tab:nth-child(2)').classList.add('active');
+        document.getElementById('login-form').classList.add('hidden');
+        document.getElementById('register-form').classList.remove('hidden');
+      }
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+
+      try {
+        const userCredential = await auth.signInWithEmailAndPassword(email, password);
+        Toast.show('Login successful! Redirecting...', 'success');
+        await postAuth(userCredential.user);
+      } catch (error) {
+        Toast.show('Login failed: ' + (error.message || error), 'error');
+      }
+    }
+
+    async function handleRegister(e) {
+      e.preventDefault();
+      const name = document.getElementById('reg-name').value;
+      const email = document.getElementById('reg-email').value;
+      const password = document.getElementById('reg-password').value;
+
+      try {
+        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        const user = userCredential.user;
+        await user.updateProfile({ displayName: name });
+        Toast.show('Registration successful!', 'success');
+        await postAuth(user);
+      } catch (error) {
+        Toast.show('Registration failed: ' + (error.message || error), 'error');
+      }
+    }
+
+    async function signInWithGoogle() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      try {
+        const result = await auth.signInWithPopup(provider);
+        Toast.show('Google Sign-In successful!', 'success');
+        await postAuth(result.user);
+      } catch (error) {
+        console.error(error);
+        Toast.show('Google Sign-In Failed: ' + (error.message || error), 'error');
+      }
+    }
+
+    async function postAuth(user) {
+      try {
+        const token = await user.getIdToken();
+        localStorage.setItem('authToken', token);
+
+        // Sync user with backend
+        const syncRes = await fetch('/api/auth/sync', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if(syncRes.ok) {
+          const data = await syncRes.json();
+          // Store user role
+          localStorage.setItem('userRole', data.role);
+          setTimeout(() => {
+            if (data.role === 'admin') {
+              window.location.href = '/admin';
             } else {
-                document.querySelector('.tab:nth-child(2)').classList.add('active');
-                document.getElementById('login-form').classList.add('hidden');
-                document.getElementById('register-form').classList.remove('hidden');
+              window.location.href = '/';
             }
+          }, 850); // short delay for toast visibility
+        } else {
+          console.error("Sync failed");
+          window.location.href = '/';
         }
-
-        async function handleLogin(e) {
-            e.preventDefault();
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            
-            try {
-                const userCredential = await auth.signInWithEmailAndPassword(email, password);
-                Toast.show('Login successful! Redirecting...', 'success');
-                await postAuth(userCredential.user);
-            } catch (error) {
-                Toast.show('Login failed: ' + error.message, 'error');
-            }
-        }
-
-        async function handleRegister(e) {
-            e.preventDefault();
-            const name = document.getElementById('reg-name').value;
-            const email = document.getElementById('reg-email').value;
-            const password = document.getElementById('reg-password').value;
-
-            try {
-                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-                const user = userCredential.user;
-                await user.updateProfile({ displayName: name });
-                Toast.show('Registration successful!', 'success');
-                await postAuth(user);
-            } catch (error) {
-                Toast.show('Registration failed: ' + error.message, 'error');
-            }
-        }
-
-        async function signInWithGoogle() {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            try {
-                const result = await auth.signInWithPopup(provider);
-                Toast.show('Google Sign-In successful!', 'success');
-                await postAuth(result.user);
-            } catch (error) {
-                console.error(error);
-                Toast.show('Google Sign-In Failed: ' + error.message, 'error');
-            }
-        }
-
-        async function postAuth(user) {
-            try {
-                const token = await user.getIdToken();
-                localStorage.setItem('authToken', token);
-                
-                // Sync user with backend
-                const syncRes = await fetch('/api/auth/sync', {
-                    method: 'POST',
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-
-                if(syncRes.ok) {
-                    const data = await syncRes.json();
-                    
-                    // Store user role
-                    localStorage.setItem('userRole', data.role);
-                    
-                    setTimeout(() => {
-                        if (data.role === 'admin') {
-                             window.location.href = '/admin';
-                        } else {
-                             window.location.href = '/';
-                        }
-                    }, 1000); // Wait a sec for toast
-                } else {
-                    console.error("Sync failed");
-                    window.location.href = '/';
-                }
-            } catch (err) {
-                console.error(err);
-                Toast.show("Authentication processing failed.", 'error');
-            }
-        }
-    </script>
+      } catch (err) {
+        console.error(err);
+        Toast.show("Authentication processing failed.", 'error');
+      }
+    }
+  </script>
 </body>
 </html>

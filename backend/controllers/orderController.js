@@ -17,11 +17,11 @@ const createOrder = async (req, res) => {
 
   try {
     const order = new Order({
-      userId: req.dbUser ? req.dbUser._id : null, // Assuming fetched in middleware
-      products, // Expecting array of { productId, quantity }
+      userId: req.dbUser ? req.dbUser._id : null, 
+      products, 
       totalAmount,
       paymentId,
-      status: 'pending' // Initial status
+      status: 'pending' 
     });
 
     if (!req.dbUser) {
