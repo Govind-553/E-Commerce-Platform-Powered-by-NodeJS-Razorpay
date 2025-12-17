@@ -1,32 +1,86 @@
-# Cartify - Shopping Website Powered by NodeJS 💻💳
-This project demonstrates the integration of Razorpay payment gateway in a Node.js<br>
-application. The application includes a responsive product page 🛍️ listing various<br>
-products. Users can select a product and proceed to make a payment 💰. The payment<br> 
-process involves creating an order via Razorpay and completing the transaction seamlessly.
+# 🛒 Cartify — E-Commerce Platform Powered by Node.js & Razorpay
 
-### ✨ Features
-* **🛒 Product Listing:** Display multiple products with their images, descriptions, and prices.
-* **📱 Responsive Design:** Fully responsive for a smooth experience on all devices.
-* **🔐 Payment Integration:** Securely handles payments with Razorpay's API.
-* **📊 Order Management:** Creates and verifies orders dynamically.
-* **🎨 Interactive UI:** Clean layout with hover effects and transitions for a better user experience.
+<p align="center">
+  <img src="https://img.shields.io/badge/Node.js-Backend-green?logo=node.js" />
+  <img src="https://img.shields.io/badge/Express.js-Framework-black?logo=express" />
+  <img src="https://img.shields.io/badge/MongoDB-Database-darkgreen?logo=mongodb" />
+  <img src="https://img.shields.io/badge/Razorpay-Payments-blue?logo=razorpay" />
+  <img src="https://img.shields.io/badge/Vercel-Frontend-black?logo=vercel" />
+  <img src="https://img.shields.io/badge/Render-Backend-purple?logo=render" />
+</p>
 
-### 🔄 Razorpay Integration Workflow
+<p align="center">
+  <strong>Full-Stack E-Commerce Platform with User & Admin Panel</strong>
+</p>
 
-1. Order Creation 📝
-* When a user selects a product and clicks "Pay Now," the server creates an order via Razorpay's API.
-* The Razorpay order ID is sent to the client.
+---
 
-2. Payment Processing 🔒
-* Razorpay Checkout is triggered with the order details.
-* Users complete the payment securely.
+**Cartify** is a full-stack e-commerce platform built with **Node.js (Express)**, **MongoDB**, and **Razorpay Payment Gateway**, featuring a modern responsive UI.  
+The platform supports both **User-side shopping workflows** and **Admin-side product & order management**.
 
-3. Payment Verification 🛡️
-* Razorpay sends a payment signature back to the server for verification.
-* The server confirms the payment and completes the order.
+🧑‍💻 **Users** can browse products, manage carts, and checkout securely  
+🛠️ **Admins** can manage products, orders, and monitor platform activity  
 
-### 🛠️ Key Technologies
-* **Node.js:** Backend server logic.
-* **Express.js:** Web framework for Node.js.
-* **Razorpay SDK:** Payment gateway integration.
-* **CSS:** Responsive and interactive styling.
+🔗 **Live Demo:** (Cartify-Ecommerce)[https://cartifyecommerce.vercel.app/]
+
+---
+
+## Features
+
+### User Side
+
+- **Responsive Product Catalog** — Browse multiple products with images, descriptions, and pricing. :contentReference[oaicite:1]{index=1}
+- **Add to Cart & Cart Management** — Add items to a cart, adjust quantity, and remove items.  
+- **Checkout with Razorpay** — Create orders and complete secure payments using Razorpay. :contentReference[oaicite:2]{index=2}
+- **Order Confirmation** — After payment verification, users receive a confirmation with order details.
+
+### Admin Side
+
+- **Product Management** — Admins can add new products with images, edit product details, or remove products from store.
+- **Order Management** — View all orders, filter by status, and manage order fulfillment.
+- **User Management** — List and manage registered users (if implemented).
+- **Dashboard Overview** — Quick overview of sales, orders, and recent activity.
+
+### Payment & Validation
+
+- **Secure Razorpay Integration** — Orders are created server-side using Razorpay SDK, and payment is verified with a secure signature check. :contentReference[oaicite:3]{index=3}
+- **Order Verification API** — Ensures that payment is validated before confirming orders.
+
+---
+
+## Tech Stack
+
+**Frontend**
+- HTML / CSS / JavaScript  
+- Responsive UI design  
+
+**Backend**
+- **Node.js** with **Express.js**
+- Razorpay SDK for payment workflows :contentReference[oaicite:4]{index=4}
+
+**Database**
+- **MongoDB**
+
+**Deployment**
+- Vercel for production deployment
+- Render for backend API 
+
+---
+
+## Getting Started
+
+Follow these steps to run the project locally.
+
+### Prerequisites
+
+- Node.js (v14+ recommended)
+- npm or yarn
+- Razorpay account for API Keys :contentReference[oaicite:5]{index=5}
+
+### Clone the repository
+
+```bash
+git clone https://github.com/Govind-553/E-Commerce-Platform-Powered-by-NodeJS-Razorpay.git
+cd E-Commerce-Platform-Powered-by-NodeJS-Razorpay
+
+
