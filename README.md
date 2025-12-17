@@ -10,18 +10,18 @@
 </p>
 
 <p align="center">
-  <strong>Full-Stack E-Commerce Platform with User & Admin Panel</strong>
+  <strong>Full-Stack E-Commerce Platform with User & Admin Panels</strong>
 </p>
 
 ---
 
-**Cartify** is a full-stack e-commerce platform built with **Node.js (Express)**, **MongoDB**, and **Razorpay Payment Gateway**, featuring a modern responsive UI.  
-The platform supports both **User-side shopping workflows** and **Admin-side product & order management**.
+**Cartify** is a full-stack e-commerce platform built with **Node.js (Express)**, **MongoDB**, and **Razorpay Payment Gateway**, featuring a modern and responsive user interface.  
+The platform supports both **user-side shopping workflows** and **admin-side product and order management**.
 
 🧑‍💻 **Users** can browse products, manage carts, and checkout securely  
 🛠️ **Admins** can manage products, orders, and monitor platform activity  
 
-🔗 **Live Demo:** (Cartify-Ecommerce)[https://cartifyecommerce.vercel.app/]
+🔗 **Live Demo:** [Cartify E-Commerce](https://cartifyecommerce.vercel.app/)
 
 ---
 
@@ -29,41 +29,44 @@ The platform supports both **User-side shopping workflows** and **Admin-side pro
 
 ### User Side
 
-- **Responsive Product Catalog** — Browse multiple products with images, descriptions, and pricing. :contentReference[oaicite:1]{index=1}
-- **Add to Cart & Cart Management** — Add items to a cart, adjust quantity, and remove items.  
-- **Checkout with Razorpay** — Create orders and complete secure payments using Razorpay. :contentReference[oaicite:2]{index=2}
-- **Order Confirmation** — After payment verification, users receive a confirmation with order details.
+- **Responsive Product Catalog** — Browse products with images, descriptions, and pricing  
+- **Cart Management** — Add items to cart, update quantities, or remove products  
+- **Secure Checkout** — Complete payments using Razorpay payment gateway  
+- **Order Confirmation** — Orders are confirmed only after successful payment verification  
 
 ### Admin Side
 
-- **Product Management** — Admins can add new products with images, edit product details, or remove products from store.
-- **Order Management** — View all orders, filter by status, and manage order fulfillment.
-- **User Management** — List and manage registered users (if implemented).
-- **Dashboard Overview** — Quick overview of sales, orders, and recent activity.
+- **Product Management** — Add, edit, and delete products with images and pricing  
+- **Order Management** — View and manage all customer orders  
+- **User Management** — View registered users (if implemented)  
+- **Admin Dashboard** — Overview of orders, products, and activity  
 
 ### Payment & Validation
 
-- **Secure Razorpay Integration** — Orders are created server-side using Razorpay SDK, and payment is verified with a secure signature check. :contentReference[oaicite:3]{index=3}
-- **Order Verification API** — Ensures that payment is validated before confirming orders.
+- **Razorpay Integration** — Orders are created server-side using Razorpay SDK  
+- **Payment Verification** — Secure signature verification before order confirmation  
 
 ---
 
 ## Tech Stack
 
-**Frontend**
-- HTML / CSS / JavaScript  
-- Responsive UI design  
+### Frontend
+- HTML  
+- CSS  
+- JavaScript  
+- Responsive UI Design  
 
-**Backend**
-- **Node.js** with **Express.js**
-- Razorpay SDK for payment workflows :contentReference[oaicite:4]{index=4}
+### Backend
+- Node.js  
+- Express.js  
+- Razorpay SDK  
 
-**Database**
-- **MongoDB**
+### Database
+- MongoDB  
 
-**Deployment**
-- Vercel for production deployment
-- Render for backend API 
+### Deployment
+- **Frontend:** Vercel  
+- **Backend API:** Render  
 
 ---
 
@@ -73,14 +76,12 @@ Follow these steps to run the project locally.
 
 ### Prerequisites
 
-- Node.js (v14+ recommended)
+- Node.js (v14 or higher)
 - npm or yarn
-- Razorpay account for API Keys :contentReference[oaicite:5]{index=5}
+- Razorpay account for API keys
 
-### Clone the repository
+### Clone the Repository
 
 ```bash
 git clone https://github.com/Govind-553/E-Commerce-Platform-Powered-by-NodeJS-Razorpay.git
 cd E-Commerce-Platform-Powered-by-NodeJS-Razorpay
-
-
