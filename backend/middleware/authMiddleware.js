@@ -1,23 +1,50 @@
 const admin = require('firebase-admin');
+const fs = require('fs');
+const path = require('path');
 const User = require('../models/User');
 
-// Initialize Firebase Admin
-// You must provide the serviceAccountKey.json or set environment variables
-try {
-  const serviceAccount = process.env.FIREBASE_CREDENTIALS 
-    ? JSON.parse(process.env.FIREBASE_CREDENTIALS)
-    : require('../serviceAccountKey.json');
+/* Firebase Admin Initialization */
+if (!admin.apps.length) {
+  try {
+    let serviceAccount;
 
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
-  });
-  console.log('Firebase Admin Initialized');
-} catch (error) {
-  console.warn('Firebase Admin Initialization Failed: Provide serviceAccountKey.json or FIREBASE_CREDENTIALS env var to use Auth features.');
+    // 1️⃣ Render Secret File (Production)
+    const renderSecretPath = '/etc/secrets/firebaseServiceAccount.json';
+
+    if (fs.existsSync(renderSecretPath)) {
+      serviceAccount = JSON.parse(
+        fs.readFileSync(renderSecretPath, 'utf8')
+      );
+      console.log('✅ Firebase credentials loaded from Render Secret File');
+    }
+
+    else if (process.env.FIREBASE_CREDENTIALS) {
+      serviceAccount = JSON.parse(process.env.FIREBASE_CREDENTIALS);
+      console.log('⚠️ Firebase credentials loaded from ENV (local)');
+    }
+
+    else {
+      throw new Error('Firebase credentials not found');
+    }
+
+    admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount)
+    });
+
+    console.log('🔥 Firebase Admin Initialized');
+
+  } catch (error) {
+    console.error('❌ Firebase Admin Initialization Failed');
+    console.error(error.message);
+  }
 }
 
+/* Verify Firebase Token */
 const verifyToken = async (req, res, next) => {
-  const token = req.headers.authorization?.split(' ')[1];
+  const authHeader = req.headers.authorization;
+  const token = authHeader?.startsWith('Bearer ')
+    ? authHeader.split(' ')[1]
+    : null;
 
   if (!token) {
     return res.status(401).json({ message: 'No token provided' });
@@ -26,32 +53,23 @@ const verifyToken = async (req, res, next) => {
   try {
     const decodedToken = await admin.auth().verifyIdToken(token);
     req.user = decodedToken;
-    
-    // Check if user exists in our DB, if not sync (optional, or do it in a separate route)
-    // For now, let's just fetch the role from our DB if the user exists
+
     const user = await User.findOne({ firebaseUid: decodedToken.uid });
-    if (user) {
-      req.dbUser = user;
-    }
+    if (user) req.dbUser = user;
 
     next();
   } catch (error) {
-    console.error('Error verifying token:', error);
-    return res.status(403).json({ message: 'Unauthorized', error: error.message });
+    console.error('❌ Token verification failed:', error.message);
+    return res.status(403).json({ message: 'Unauthorized' });
   }
 };
 
-const isAdmin = async (req, res, next) => {
-  if (req.dbUser && req.dbUser.role === 'admin') {
-    next();
-  } else {
-    // Fallback: Check custom claims if we set them in firebase
-    if (req.user.admin) {
-        next();
-    } else {
-        res.status(403).json({ message: 'Access denied: Admin only' });
-    }
-  }
+/* Admin Guard */
+const isAdmin = (req, res, next) => {
+  if (req.dbUser?.role === 'admin') return next();
+  if (req.user?.admin === true) return next();
+
+  return res.status(403).json({ message: 'Access denied: Admin only' });
 };
 
 module.exports = { verifyToken, isAdmin };

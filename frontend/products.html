@@ -657,6 +657,7 @@
 </footer>
 
     <script src="js/toast.js"></script>
+    <script src="js/config.js"></script>
     <script>
     // Auth Check
     document.addEventListener('DOMContentLoaded', () => {
@@ -722,7 +723,7 @@ close.addEventListener('click', () => {
 
 let products = null;
 
-fetch('/api/products')
+fetch(`${BACKEND_API_URL}/api/products`)
     .then(response => response.json())
     .then(data => {
         products = data;

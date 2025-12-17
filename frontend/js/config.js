@@ -1,0 +1,1 @@
+const BACKEND_API_URL = 'https://cartify-server-nlc0.onrender.com';

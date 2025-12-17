@@ -174,7 +174,6 @@
       tr.inventory-row td[data-label="Actions"] { gap:8px; }
       tr.inventory-row td[data-label="Actions"] .btn { min-width:44px; height:44px; padding:0; display:inline-flex; align-items:center; justify-content:center; border-radius:10px; }
 
-      /* For orders (no image), present each field as a separate row label-left value-right */
       tr.order-row {
         display:block;
         border-radius:10px;
@@ -196,7 +195,6 @@
       }
     }
 
-    /* Desktop/tablet retain table layout */
     @media (min-width: 901px) {
       tr.inventory-row, tr.order-row { display:table-row }
       tr.inventory-row td, tr.order-row td { display:table-cell }
@@ -370,6 +368,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
   <script src="js/firebaseConfig.js"></script>
   <script src="js/toast.js"></script>
+  <script src="js/config.js"></script> 
 
   <script>
     // All original JS behavior preserved
@@ -433,7 +432,7 @@
 
     async function fetchProducts() {
       try {
-        const res = await fetch('/api/products');
+        const res = await fetch(`${BACKEND_API_URL}/api/products`);
         const products = await res.json();
         renderProducts(products);
         return products;
@@ -446,7 +445,8 @@
 
     async function fetchStatsAndOrders(token, products) {
       try {
-        const res = await fetch('/api/orders/all', { headers: { 'Authorization': `Bearer ${token}` }});
+        const res = await fetch(`${BACKEND_API_URL}/api/orders/all`, { headers: { Authorization: `Bearer ${token}` }});
+
         if (!res.ok) {
           if (res.status === 401 || res.status === 403) {
             Toast.show("Unauthorized access", 'error');
@@ -460,7 +460,7 @@
         // New: Fetch User Count
         let userCount = 0;
         try {
-            const userRes = await fetch('/api/users', { headers: { 'Authorization': `Bearer ${token}` }});
+            const userRes = await fetch(`${BACKEND_API_URL}/api/users`, { headers: { 'Authorization': `Bearer ${token}` }});
             if(userRes.ok) {
                 const users = await userRes.json();
                 // Filter out admins (role === 'admin')
@@ -579,7 +579,7 @@
 
     window.updateOrderStatus = async (id, status) => {
       try {
-        const res = await fetch(`/api/orders/${id}/status`, {
+        const res = await fetch(`${BACKEND_API_URL}/api/orders/${id}/status`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
           body: JSON.stringify({ status })
@@ -700,7 +700,7 @@
       };
 
       const method = id ? 'PUT' : 'POST';
-      const url = id ? `/api/products/${id}` : '/api/products';
+      const url = id ? `${BACKEND_API_URL}/api/products/${id}` : `${BACKEND_API_URL}/api/products`;
 
       try {
         const res = await fetch(url, {
@@ -725,7 +725,7 @@
 
     window.editProduct = async (id) => {
       try {
-        const res = await fetch('/api/products');
+        const res = await fetch(`${BACKEND_API_URL}/api/products`);
         const products = await res.json();
         const p = products.find(prod => prod._id === id);
         if (!p) return;
@@ -745,7 +745,7 @@
     window.deleteProduct = async (id) => {
       if (!confirm('Are you sure you want to delete this product?')) return;
       try {
-        const res = await fetch(`/api/products/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` }});
+        const res = await fetch(`${BACKEND_API_URL}/api/products/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` }});
         if (res.ok) {
           Toast.show('Product deleted', 'success');
           fetchProducts();

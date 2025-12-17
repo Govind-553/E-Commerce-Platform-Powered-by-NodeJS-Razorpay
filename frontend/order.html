@@ -774,6 +774,7 @@ footer {
 </footer>
 
 <script src="js/toast.js"></script>
+<script src="js/config.js"></script>
 <script>
         const statesInIndia = [
             "Mumbai", "Amritsar", "Chandigarh", "Patna", "Dehradun", "Delhi", "Goa",
@@ -832,13 +833,13 @@ footer {
                 }
             }
 
-            fetch('/get-razorpay-key', {
+            fetch(`${BACKEND_API_URL}/get-razorpay-key`, {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
             })
                 .then(response => response.json())
                 .then(data => {
                     const token = localStorage.getItem('authToken');
-                    fetch('/create-order', {
+                    fetch(`${BACKEND_API_URL}/create-order`, {
                         method: 'POST',
                         headers: { 
                             'Content-Type': 'application/json',
@@ -924,7 +925,7 @@ footer {
                 // COD Logic - Try to create order in backend
                 const token = localStorage.getItem('authToken');
                 if (token && amount > 0) {
-                    fetch('/create-order', {
+                    fetch(`${BACKEND_API_URL}/create-order`, {
                         method: 'POST',
                         headers: { 
                             'Content-Type': 'application/json',
