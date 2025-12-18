@@ -192,9 +192,9 @@
         .status-shipped { background: #dbeafe; color: #1e40af; }
         .status-cancelled { background: #fee2e2; color: #991b1b; }
 
-        .order-products { margin-top:0.5rem; border-top: 1px dashed #eef2f7; padding-top:0.6rem; }
-        .product-row { display:flex; gap:10px; align-items:center; margin-bottom:8px; }
-        .product-row img { width:44px; height:44px; object-fit:cover; border-radius:6px; background:#f3f4f6; }
+        .order-products { margin-top:0.5rem; border-top: 1px dashed #eef2f7; padding-top:0.6rem; display:flex; flex-direction:column; gap:8px; }
+        .product-row { display:flex; gap:10px; align-items:center; margin-bottom:4px; flex-wrap:wrap; }
+        .product-row img { width:48px; height:48px; object-fit:cover; border-radius:6px; background:#f3f4f6; flex-shrink:0; }
 
         .order-actions { text-align:right; margin-top:0.5rem; }
         .btn-outline {
@@ -521,13 +521,28 @@
             }).join('');
         }
 
-        function renderOrders(orders) {
+        async function renderOrders(orders) {
             const list = document.getElementById('orderList');
             list.innerHTML = '';
 
             if (!orders || orders.length === 0) {
                 list.innerHTML = '<p style="color: var(--muted);">You have no orders yet.</p>';
                 return;
+            }
+
+            // Fetch all products once to enrich order details
+            let productsMap = {};
+            try {
+                const prodRes = await fetch(`${BACKEND_API_URL}/api/products`);
+                if (prodRes.ok) {
+                    const products = await prodRes.json();
+                    productsMap = products.reduce((acc, p) => {
+                        acc[p._id] = p;
+                        return acc;
+                    }, {});
+                }
+            } catch (e) {
+                console.error("Error fetching products for enrichment:", e);
             }
 
             orders.forEach(order => {
@@ -538,12 +553,18 @@
                 if (order.products && order.products.length > 0) {
                     productsHtml = '<div class="order-products">';
                     order.products.forEach(p => {
+                        // Enrich with live product data if available, fallback to snapshot
+                        const liveProduct = productsMap[p.productId] || {};
+                        const productImage = liveProduct.image || p.image || '/img/logo.png';
+                        const productPrice = p.price; // Use snapshot price for order accuracy
+                        const productName = p.name;
+                        
                         productsHtml += `
                             <div class="product-row">
-                                <img src="${p.image || '/img/logo.png'}" alt="${(p.name||'product')}" />
-                                <div style="font-size: 0.95rem; min-width:0;">
-                                    <div style="font-weight:700; white-space:normal; word-break:break-word;">${p.name}</div>
-                                    <div style="color: var(--muted); font-size: 0.85rem;">Qty: ${p.quantity} × Rs.${p.price}</div>
+                                <img src="${productImage}" alt="${productName || 'product'}" onerror="this.src='/img/logo.png'" />
+                                <div style="font-size: 0.95rem; min-width:0; flex:1;">
+                                    <div style="font-weight:700; white-space:normal; word-break:break-word;">${productName}</div>
+                                    <div style="color: var(--muted); font-size: 0.85rem;">Qty: ${p.quantity} × Rs.${productPrice}</div>
                                 </div>
                             </div>
                         `;

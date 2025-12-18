@@ -13,6 +13,18 @@ const orderSchema = new mongoose.Schema({
         ref: 'Product',
         required: true,
       },
+      name: {
+        type: String,
+        default: 'Product',
+      },
+      price: {
+        type: Number,
+        required: true,
+      },
+      image: {
+        type: String,
+        default: '/img/logo.png',
+      },
       quantity: {
         type: Number,
         required: true,

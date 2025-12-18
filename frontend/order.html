@@ -856,10 +856,23 @@ footer {
                                 "name": "CARTIFY",
                                 "description": "Order Payment",
                                 "image": "/img/logo.png",
-                                "handler": function (response) {
+                                "handler": async function (response) {
                                     localStorage.removeItem("cartSummary");
                                     document.cookie = "listCart=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                                    // clear server-side cart too
+                                    const token = localStorage.getItem('authToken');
+                                    if (token) {
+                                        try {
+                                            await fetch(`${BACKEND_API_URL}/api/cart`, {
+                                                method: 'DELETE',
+                                                headers: { 'Authorization': 'Bearer ' + token }
+                                            });
+                                        } catch (e) {
+                                            console.error('Clear cart error', e);
+                                        }
+                                    }
                                     showSuccessModal();
+                                    Toast.show('Order placed successfully!', 'success');
                                 },
                                 "theme": {
                                     "color": "#2300a3"
