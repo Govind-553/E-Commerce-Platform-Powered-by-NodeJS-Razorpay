@@ -812,10 +812,9 @@ footer {
             }
         }
 
-        window.addEventListener("load", function() {
-            const cartSummary = JSON.parse(localStorage.getItem("cartSummary")) || { totalQuantity: 0, totalPrice: 0 };
-            document.querySelector('.totalQuantity').innerText = cartSummary.totalQuantity;
-            document.querySelector('.totalPrice').innerText = 'Amount: Rs.' + cartSummary.totalPrice;
+        window.addEventListener("load", async function() {
+            // Load cart from server
+            await loadCartFromServer();
         });
 
         function initiateRazorpayPayment(amount) {
@@ -935,7 +934,7 @@ footer {
                             amount, 
                             currency: 'INR', 
                             products, 
-                            status: 'pending', // Default
+                            status: 'pending',
                             paymentMethod: 'COD' 
                         })
                     }).then(res => res.json())
@@ -945,7 +944,7 @@ footer {
                       })
                       .catch(err => {
                           console.error("COD Order Error:", err);
-                          finalizeOrder(); // Proceed anyway for UI
+                          finalizeOrder();
                       });
                 } else {
                      finalizeOrder();
@@ -953,6 +952,14 @@ footer {
 
                 function finalizeOrder() {
                     localStorage.removeItem("cartSummary");
+                    // clear server-side cart too
+                    const token = localStorage.getItem('authToken');
+                    if (token) {
+                        fetch(`${BACKEND_API_URL}/api/cart`, {
+                            method: 'DELETE',
+                            headers: { 'Authorization': 'Bearer ' + token }
+                        }).catch(e => console.error('Clear cart error', e));
+                    }
                     document.cookie = "listCart=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
                     showSuccessModal();
                     Toast.show('Order placed successfully!', 'success');
@@ -982,23 +989,34 @@ footer {
 
         let listCart = {};
 
-        function loadCartFromCookie() {
-            const cookieValue = document.cookie
-                .split('; ')
-                .find(row => row.startsWith('listCart='));
-            if (cookieValue) {
-                try {
-                    listCart = JSON.parse(cookieValue.split('=')[1]);
-                    if (typeof listCart !== 'object' || listCart === null) {
-                        listCart = {};
+        async function loadCartFromServer() {
+            const token = localStorage.getItem('authToken');
+            if (!token) { window.location.href = '/login'; return; }
+            try {
+                const res = await fetch(`${BACKEND_API_URL}/api/cart`, {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                if (!res.ok) {
+                    if (res.status === 401 || res.status === 403) {
+                        localStorage.removeItem('authToken');
+                        window.location.href = '/login';
                     }
-                } catch (e) {
-                    console.error('Error parsing listCart cookie', e);
                     listCart = {};
+                    return;
                 }
-            } else {
+                const data = await res.json();
+                listCart = {};
+                if (Array.isArray(data.items)) {
+                    data.items.forEach(it => {
+                        const pid = it.productId || (it.product && it.product._id) || it.product;
+                        listCart[pid] = { _id: pid, image: it.image, name: it.name, price: it.price, quantity: it.quantity };
+                    });
+                }
+            } catch (e) {
+                console.error('loadCartFromServer error', e);
                 listCart = {};
             }
+            updateSummaryFromCart();
         }
 
         function updateSummaryFromCart() {
@@ -1026,7 +1044,6 @@ footer {
         const cartCloseBottomBtn = document.getElementById('cart-close-bottom');
 
         function renderCartModal() {
-            loadCartFromCookie();
             cartModalList.innerHTML = '';
             let hasItems = false;
 
@@ -1075,12 +1092,23 @@ footer {
             }
         });
 
-        cartModalList.addEventListener('click', (e) => {
+        cartModalList.addEventListener('click', async (e) => {
             if (e.target.classList.contains('cart-remove')) {
                 const id = e.target.getAttribute('data-id');
                 if (id && listCart[id]) {
                     delete listCart[id];
-                    document.cookie = "listCart=" + JSON.stringify(listCart) + "; path=/;";
+                    // sync deletion to server
+                    const token = localStorage.getItem('authToken');
+                    if (token) {
+                        try {
+                            await fetch(`${BACKEND_API_URL}/api/cart/item/${encodeURIComponent(id)}`, {
+                                method: 'DELETE',
+                                headers: { 'Authorization': 'Bearer ' + token }
+                            });
+                        } catch (err) {
+                            console.error('cart item delete error', err);
+                        }
+                    }
                     renderCartModal();
                     updateSummaryFromCart();
                 }
@@ -1096,6 +1124,9 @@ footer {
         if (cartCloseBottomBtn) {
             cartCloseBottomBtn.addEventListener('click', closeCartModal);
         }
+
+        // Load cart from server on page load
+        (async () => { await loadCartFromServer(); })();
     </script>
 </body>
 </html>

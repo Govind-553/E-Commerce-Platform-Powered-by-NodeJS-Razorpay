@@ -688,27 +688,43 @@ const cartCloseBottomBtn = document.getElementById('cart-close-bottom');
 
 let listCart = {};
 
-function checkCart() {
-    const cookieValue = document.cookie
-        .split('; ')
-        .find(row => row.startsWith('listCart='));
-    if (cookieValue) {
-        try {
-            listCart = JSON.parse(cookieValue.split('=')[1]);
-            if (typeof listCart !== 'object' || listCart === null) {
-                listCart = {};
+async function checkCart() {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+        // redirect to login if not authenticated
+        window.location.href = '/login';
+        return;
+    }
+
+    // fetch cart from server
+    try {
+        const res = await fetch(`${BACKEND_API_URL}/api/cart`, {
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+        if (!res.ok) {
+            if (res.status === 401 || res.status === 403) {
+                localStorage.removeItem('authToken');
+                window.location.href = '/login';
             }
-        } catch (e) {
-            console.error("Error parsing listCart from cookie:", e);
             listCart = {};
+            return;
         }
-    } else {
+        const data = await res.json();
+        listCart = {};
+        if (Array.isArray(data.items)) {
+            data.items.forEach(it => {
+                const pid = it.productId || (it.product && it.product._id) || it.product;
+                listCart[pid] = { _id: pid, image: it.image, name: it.name, price: it.price, quantity: it.quantity };
+            });
+        }
+    } catch (e) {
+        console.error('checkCart error', e);
         listCart = {};
     }
+    addCartToHTML();
 }
 
-checkCart();
-addCartToHTML();
+(async () => { await checkCart(); })();
 
 function addCartToHTML() {
     const listCartHTML = document.querySelector('.returnCart .list');
@@ -744,12 +760,23 @@ function addCartToHTML() {
     renderCartModal();
 }
 
-function removeProduct(element, idProduct) {
+async function removeProduct(element, idProduct) {
     if (element && element.parentElement) {
         element.parentElement.remove();
     }
     delete listCart[idProduct];
-    document.cookie = "listCart=" + JSON.stringify(listCart) + "; path=/";
+    // sync removal to server
+    const token = localStorage.getItem('authToken');
+    if (token) {
+        try {
+            await fetch(`${BACKEND_API_URL}/api/cart/item/${encodeURIComponent(idProduct)}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+        } catch (e) {
+            console.error('removeProduct sync error', e);
+        }
+    }
     addCartToHTML();
 }
 
