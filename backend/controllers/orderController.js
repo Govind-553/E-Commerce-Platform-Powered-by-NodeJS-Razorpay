@@ -44,10 +44,28 @@ const getMyOrders = async (req, res) => {
         return res.status(401).json({ message: 'User not found' });
     }
     // Populate product basic fields so frontend can show image/name/price even
-    // if snapshots are missing on older orders
-    const orders = await Order.find({ userId: req.dbUser._id })
+    // if snapshots are missing on older orders. Merge populated product fields
+    // into the product snapshot so frontend can read `product.name` and
+    // `product.image` (older UI expects snapshot fields).
+    let orders = await Order.find({ userId: req.dbUser._id })
       .populate('products.productId', 'name price image')
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .lean();
+
+    orders = orders.map((order) => {
+      order.products = order.products.map((p) => {
+        if (p.productId && typeof p.productId === 'object') {
+          const prod = p.productId;
+          p.name = prod.name || p.name;
+          p.image = prod.image || p.image;
+          p.price = prod.price != null ? prod.price : p.price;
+          p.productId = prod._id;
+        }
+        return p;
+      });
+      return order;
+    });
+
     res.json(orders);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -61,10 +79,26 @@ const getAllOrders = async (req, res) => {
   try {
     // Populate user details (name, email) from User model
     // Also populate product details for admin view
-    const orders = await Order.find({})
+    let orders = await Order.find({})
       .populate('userId', 'name email')
       .populate('products.productId', 'name price image')
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .lean();
+
+    orders = orders.map((order) => {
+      order.products = order.products.map((p) => {
+        if (p.productId && typeof p.productId === 'object') {
+          const prod = p.productId;
+          p.name = prod.name || p.name;
+          p.image = prod.image || p.image;
+          p.price = prod.price != null ? prod.price : p.price;
+          p.productId = prod._id;
+        }
+        return p;
+      });
+      return order;
+    });
+
     res.json(orders);
   } catch (error) {
     res.status(500).json({ message: error.message });

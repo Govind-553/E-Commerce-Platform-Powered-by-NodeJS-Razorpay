@@ -543,9 +543,10 @@
                     order.products.forEach(p => {
                         // Use snapshot first (ensures historical accuracy), fall back to populated product
                         const populated = (p.productId && (typeof p.productId === 'object')) ? p.productId : null;
-                        const productImage = p.image || (populated && populated.image) || '/img/logo.png';
-                        const productPrice = (typeof p.price !== 'undefined' && p.price !== null) ? p.price : (populated && populated.price) || 0;
-                        const productName = p.name || (populated && populated.name) || 'Product';
+                        // Prefer populated product fields (fresh DB values) over stored snapshots
+                        const productImage = (populated && populated.image) || p.image || '/img/logo.png';
+                        const productPrice = (populated && (typeof populated.price !== 'undefined' && populated.price !== null)) ? populated.price : ((typeof p.price !== 'undefined' && p.price !== null) ? p.price : 0);
+                        const productName = (populated && populated.name) || p.name || 'Product';
                         
                         productsHtml += `
                             <div class="product-row">
