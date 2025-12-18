@@ -43,7 +43,11 @@ const getMyOrders = async (req, res) => {
     if (!req.dbUser) {
         return res.status(401).json({ message: 'User not found' });
     }
-    const orders = await Order.find({ userId: req.dbUser._id });
+    // Populate product basic fields so frontend can show image/name/price even
+    // if snapshots are missing on older orders
+    const orders = await Order.find({ userId: req.dbUser._id })
+      .populate('products.productId', 'name price image')
+      .sort({ createdAt: -1 });
     res.json(orders);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -56,7 +60,11 @@ const getMyOrders = async (req, res) => {
 const getAllOrders = async (req, res) => {
   try {
     // Populate user details (name, email) from User model
-    const orders = await Order.find({}).populate('userId', 'name email').sort({ createdAt: -1 });
+    // Also populate product details for admin view
+    const orders = await Order.find({})
+      .populate('userId', 'name email')
+      .populate('products.productId', 'name price image')
+      .sort({ createdAt: -1 });
     res.json(orders);
   } catch (error) {
     res.status(500).json({ message: error.message });

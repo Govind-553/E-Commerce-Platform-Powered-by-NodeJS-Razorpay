@@ -192,9 +192,9 @@
         .status-shipped { background: #dbeafe; color: #1e40af; }
         .status-cancelled { background: #fee2e2; color: #991b1b; }
 
-        .order-products { margin-top:0.5rem; border-top: 1px dashed #eef2f7; padding-top:0.6rem; display:flex; flex-direction:column; gap:8px; }
-        .product-row { display:flex; gap:10px; align-items:center; margin-bottom:4px; flex-wrap:wrap; }
-        .product-row img { width:48px; height:48px; object-fit:cover; border-radius:6px; background:#f3f4f6; flex-shrink:0; }
+        .order-products { margin-top:0.5rem; border-top: 1px dashed #eef2f7; padding-top:0.6rem; display:flex; flex-wrap:wrap; gap:10px; }
+        .product-row { display:flex; gap:10px; align-items:center; margin-bottom:4px; flex: 0 1 calc(33.333% - 10px); min-width:180px; background: #fff; padding:8px; border-radius:8px; box-shadow: 0 4px 10px rgba(2,6,23,0.04); }
+        .product-row img { width:56px; height:56px; object-fit:cover; border-radius:6px; background:#f3f4f6; flex-shrink:0; }
 
         .order-actions { text-align:right; margin-top:0.5rem; }
         .btn-outline {
@@ -240,7 +240,7 @@
             .order-right { justify-content:space-between; }
             .order-right .order-status { margin-left:auto; }
 
-            .product-row { align-items:center; }
+            .product-row { align-items:center; flex: 0 1 calc(50% - 8px); }
             .product-row img { width:52px; height:52px; }
 
             .order-actions { text-align:center; margin-top:8px; }
@@ -253,6 +253,7 @@
             .card { padding: 0.9rem; }
             .order-meta .meta-line { font-size:0.85rem; }
             .order-status { font-size:0.8rem; padding:0.4rem 0.6rem; }
+            .product-row { flex: 0 1 100%; }
         }
 
         /* small polish */
@@ -530,20 +531,7 @@
                 return;
             }
 
-            // Fetch all products once to enrich order details
-            let productsMap = {};
-            try {
-                const prodRes = await fetch(`${BACKEND_API_URL}/api/products`);
-                if (prodRes.ok) {
-                    const products = await prodRes.json();
-                    productsMap = products.reduce((acc, p) => {
-                        acc[p._id] = p;
-                        return acc;
-                    }, {});
-                }
-            } catch (e) {
-                console.error("Error fetching products for enrichment:", e);
-            }
+            // No need to fetch all products — backend populates `products.productId`.
 
             orders.forEach(order => {
                 const date = new Date(order.createdAt || Date.now()).toLocaleDateString();
@@ -553,11 +541,11 @@
                 if (order.products && order.products.length > 0) {
                     productsHtml = '<div class="order-products">';
                     order.products.forEach(p => {
-                        // Enrich with live product data if available, fallback to snapshot
-                        const liveProduct = productsMap[p.productId] || {};
-                        const productImage = liveProduct.image || p.image || '/img/logo.png';
-                        const productPrice = p.price; // Use snapshot price for order accuracy
-                        const productName = p.name;
+                        // Use snapshot first (ensures historical accuracy), fall back to populated product
+                        const populated = (p.productId && (typeof p.productId === 'object')) ? p.productId : null;
+                        const productImage = p.image || (populated && populated.image) || '/img/logo.png';
+                        const productPrice = (typeof p.price !== 'undefined' && p.price !== null) ? p.price : (populated && populated.price) || 0;
+                        const productName = p.name || (populated && populated.name) || 'Product';
                         
                         productsHtml += `
                             <div class="product-row">
