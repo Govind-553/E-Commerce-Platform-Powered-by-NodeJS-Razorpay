@@ -110,16 +110,34 @@ const getAllOrders = async (req, res) => {
 // @access  Private/Admin
 const updateOrderStatus = async (req, res) => {
   try {
-    const { status } = req.body;
-    const order = await Order.findById(req.params.id);
+    let { status } = req.body;
+    if (!status) return res.status(400).json({ message: 'Status is required' });
 
-    if (order) {
-      order.status = status;
-      const updatedOrder = await order.save();
-      res.json(updatedOrder);
-    } else {
-      res.status(404).json({ message: 'Order not found' });
-    }
+    status = String(status).toLowerCase();
+    const allowed = ['pending','shipped','delivered','cancelled','completed'];
+    if (!allowed.includes(status)) return res.status(400).json({ message: 'Invalid status' });
+
+    // Update and return the new document
+    const updated = await Order.findByIdAndUpdate(req.params.id, { status }, { new: true, runValidators: true })
+      .populate('userId', 'name email')
+      .populate('products.productId', 'name price image')
+      .lean();
+
+    if (!updated) return res.status(404).json({ message: 'Order not found' });
+
+    // Merge populated fields into product snapshot for consistency with other endpoints
+    updated.products = (updated.products || []).map((p) => {
+      if (p.productId && typeof p.productId === 'object') {
+        const prod = p.productId;
+        p.name = prod.name || p.name;
+        p.image = prod.image || p.image;
+        p.price = prod.price != null ? prod.price : p.price;
+        p.productId = prod._id;
+      }
+      return p;
+    });
+
+    res.json(updated);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
