@@ -20,6 +20,7 @@ app.use('/js', express.static(path.join(__dirname, '..', 'frontend', 'js')));
 
 // API Routes
 app.use('/api/products', require('./routes/productRoutes'));
+app.use('/api/cart', require('./routes/cartRoutes'));
 app.use('/api/orders', require('./routes/orderRoutes'));
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/users', require('./routes/userRoutes'));
@@ -36,7 +37,8 @@ app.get('/products', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'frontend', 'products.html'));
 });
 
-app.get('/checkout.html', (req, res) => {
+const { ensureAuthPage } = require('./middleware/authMiddleware');
+app.get('/checkout.html', ensureAuthPage, (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'frontend', 'checkout.html'));
 });
 

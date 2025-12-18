@@ -72,4 +72,31 @@ const isAdmin = (req, res, next) => {
   return res.status(403).json({ message: 'Access denied: Admin only' });
 };
 
-module.exports = { verifyToken, isAdmin };
+/* Ensure authentication for page requests (redirects if not authenticated) */
+const ensureAuthPage = async (req, res, next) => {
+  // prefer Authorization header
+  let token = null;
+  const authHeader = req.headers.authorization;
+  if (authHeader?.startsWith('Bearer ')) token = authHeader.split(' ')[1];
+
+  // fallback to cookie named authToken
+  if (!token && req.headers.cookie) {
+    const m = req.headers.cookie.split('; ').find(c => c.startsWith('authToken='));
+    if (m) token = decodeURIComponent(m.split('=')[1]);
+  }
+
+  if (!token) return res.redirect('/login');
+
+  try {
+    const decodedToken = await admin.auth().verifyIdToken(token);
+    req.user = decodedToken;
+    const user = await User.findOne({ firebaseUid: decodedToken.uid });
+    if (user) req.dbUser = user;
+    return next();
+  } catch (err) {
+    console.error('ensureAuthPage token verify failed', err.message);
+    return res.redirect('/login');
+  }
+};
+
+module.exports = { verifyToken, isAdmin, ensureAuthPage };

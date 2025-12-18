@@ -18,56 +18,125 @@
         }
 
         /* Navbar */
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0rem 1rem;
-            max-width: 1200px;
-            margin: 0 auto;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 0 0 16px 16px;
-        }
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1.25rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 0 0 18px 18px;
+}
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: #111827;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: -5px;
-        }
-        
-        .logo img {
-            margin-top: 10px;
+/* Logo */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: -5px;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #111827;
+    text-decoration: none;
+}
+
+.logo img {
     width: 75px;
     height: 75px;
-    border-radius: 12px;
+    border-radius: 10px;
     object-fit: cover;
-        }
+    margin-top: 10px;
+}
 
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-        }
+/* Nav Links */
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+    transition: all 0.3s ease;
+}
 
-        .nav-links a {
-            text-decoration: none;
-            color: #4b5563;
-            font-weight: 600;
-            transition: color 0.2s;
-        }
+.nav-links a {
+    text-decoration: none;
+    font-weight: 600;
+    color: #4b5563;
+}
 
-        .nav-links a:hover {
-            color: #4f46e5;
-        }
+.nav-links a:hover {
+    color: #4f46e5;
+}
+
+/* Mobile Menu Toggle */
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.logo { order: 1; }
+.nav-links { order: 2; }
+.menu-toggle { order: 3; }
+
+.menu-toggle span {
+    width: 24px;
+    height: 2.5px;
+    background: #111827;
+    border-radius: 2px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+
+    .menu-toggle {
+        display: flex;
+        /* keep toggle visually on the right */
+        margin-left: auto;
+    }
+
+    .nav-links {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        width: 100%;
+        flex-direction: column;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(12px);
+        padding: 1.5rem 0;
+        gap: 2.5rem;
+        border-radius: 0 0 18px 18px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+        display: none;
+    }
+
+    .nav-links.show {
+        display: flex;
+        animation: slideDown 0.3s ease forwards;
+    }
+
+    .nav-links a {
+        font-size: 1.05rem;
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
         .btn-primary {
             background: linear-gradient(135deg, #4f46e5, #6366f1);
@@ -191,12 +260,13 @@
         /* Responsive Styles */
         @media (max-width: 768px) {
             .navbar {
-                flex-direction: column;
-                padding: 1rem;
-                gap: 1rem;
-            }
+                flex-direction: row;
+                align-items: center;
+                padding: 0.75rem 1rem;
+                gap: 0.5rem;
+                    }
             .nav-links {
-                gap: 1rem;
+                gap: 1.5rem;
                 flex-wrap: wrap;
                 justify-content: center;
                 width: 100%;
@@ -216,8 +286,6 @@
                 align-items: center;
             }
         }
-
-
         
         /* New Sections */
         .section-container { max-width: 1200px; margin: 4rem auto; padding: 0 2rem; }
@@ -266,19 +334,26 @@
 </head>
 <body>
 
-    <nav class="navbar">
-        <a href="/" class="logo">
-            <img src="/img/logo.png" alt="Cartify Logo">
-            CARTIFY
-        </a>
-        <div class="nav-links">
-            <a href="/">Home</a>
-            <a href="/products">View Products</a>
-            <div id="auth-section">
-                <a href="/login" class="btn-primary">Login</a>
-            </div>
+<nav class="navbar">
+    <a href="/" class="logo">
+        <img src="/img/logo.png" alt="Cartify Logo">
+        <span>CARTIFY</span>
+    </a>
+
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-links" id="navLinks">
+        <a href="/">Home</a>
+        <a href="/products">View Products</a>
+        <div id="auth-section">
+            <a href="/login" class="btn-primary">Login</a>
         </div>
-    </nav>
+    </div>
+</nav>
 
     <main class="hero">
         <div class="hero-content">
@@ -357,6 +432,8 @@
     <script src="js/config.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            const menuToggle = document.getElementById('menuToggle');
+            const navLinks = document.getElementById('navLinks');
             const token = localStorage.getItem('authToken');
             const role = localStorage.getItem('userRole');
             const authSection = document.getElementById('auth-section');
@@ -388,8 +465,21 @@
         function logout() {
             localStorage.removeItem('authToken');
             localStorage.removeItem('userRole');
+            // clear auth cookie
+            document.cookie = "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
             window.location.reload();
         }
+
+    menuToggle.addEventListener('click', () => {
+        navLinks.classList.toggle('show');
+    });
+
+    // Close menu on link click (mobile UX)
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', () => {
+            navLinks.classList.remove('show');
+        });
+    });
     </script>
 </body>
 </html>
