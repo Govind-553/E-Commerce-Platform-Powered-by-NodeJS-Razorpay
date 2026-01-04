@@ -6,4 +6,4 @@ node_modules
 serviceAccountKey.json 
 
 # Ignore Firebase config
-frontend/js/firebaseConfig.js
+firebaseConfig.js 

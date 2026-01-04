@@ -2,7 +2,8 @@
   "version": 2,
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/js/(.*)", "destination": "/js/$1" },
+    { "source": "/css/(.*)", "destination": "/public/css/$1" },
+    { "source": "/js/(.*)",  "destination": "/public/js/$1" },
     { "source": "/img/(.*)", "destination": "/public/img/$1" },
 
     { "source": "/login",    "destination": "/login.html" },

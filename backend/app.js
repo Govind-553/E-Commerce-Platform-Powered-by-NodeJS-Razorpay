@@ -16,7 +16,6 @@ app.use(express.urlencoded({ extended: true }));
 
 // Static files
 app.use(express.static(path.join(__dirname, '..', 'frontend', 'public')));
-app.use('/js', express.static(path.join(__dirname, '..', 'frontend', 'js')));
 
 // API Routes
 app.use('/api/products', require('./routes/productRoutes'));
