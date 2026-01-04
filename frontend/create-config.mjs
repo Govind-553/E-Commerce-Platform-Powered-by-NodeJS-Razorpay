@@ -5,8 +5,8 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-/* Output path(frontend/js/firebaseConfig.js) */
-const outputPath = path.join(__dirname, 'js', 'firebaseConfig.js');
+/* Output path(frontend/public/js/firebaseConfig.js) */
+const outputPath = path.join(__dirname, 'public', 'js', 'firebaseConfig.js');
 
 /* Firebase config content */
 const configContent = `
